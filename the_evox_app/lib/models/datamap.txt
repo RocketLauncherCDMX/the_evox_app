@@ -1,0 +1,30 @@
+-userProfile
+    -userId
+    -name
+    -email
+    -photo
+    -contryId
+    *authorizations
+        *userId
+            -homeId
+    *homes
+        -homeId
+        -name
+        -address
+        *images
+            -image
+        -coords
+        *rooms
+            -roomId
+            -name
+            -picture
+            -powerUsage
+            *devices
+                -deviceId
+                -name
+                -type
+                -controller
+                -currentMeasure
+    *invites
+        -userId
+        

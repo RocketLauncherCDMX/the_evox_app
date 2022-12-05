@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "67940379539",
+    "project_id": "the-evox-app-a0a47",
+    "storage_bucket": "the-evox-app-a0a47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67940379539:android:9dffb11345568dcad21666",
+        "android_client_info": {
+          "package_name": "com.the_evox_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67940379539-vc1akrth6hpsh8m2lc905d3o9o1k9oun.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.the_evox_app",
+            "certificate_hash": "6282b30c62fc6e0d5fb833eaa7b263e235caefd9"
+          }
+        },
+        {
+          "client_id": "67940379539-l6oakcb5ga3hsf8rr2ioqjledco1r56q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdF-OZCeYBclt_6MLbO0wYdLRKGn0acrA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67940379539-l6oakcb5ga3hsf8rr2ioqjledco1r56q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

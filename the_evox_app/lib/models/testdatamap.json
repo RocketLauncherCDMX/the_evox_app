@@ -1,0 +1,52 @@
+{
+    "userId": "0101010101",
+    "name": "User Test",
+    "email": "user@test.com",
+    "photo": "http://google.com",
+    "countryCode": "MX",
+    "homes": [
+        {
+            "homeId": "AAAAAAAA",
+            "name": "Forest House",
+            "address": {
+                "address": "555 Oakroad, Winterforest",
+                "coords": "19N 19W 19.19",
+                "countryCode": "MX"
+            },
+            "images": [
+                "http://google.com/home1.jpg",
+                "http://google.com/home2.jpg"
+            ],
+            "rooms": [
+                {
+                    "roomId": "a1a1a1a1",
+                    "name": "Living room",
+                    "picture": "http://google.com/home1room1.jpg",
+                    "powerUsage": 2535.0,
+                    "devices": [
+                        {
+                            "deviceId": "aa11aa11",
+                            "name": "Main light",
+                            "type": "Rgb Lamp",
+                            "controller": "controller1",
+                            "powerMeasure": 100.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "autorizations": [
+        {
+            "guestId": "02020202",
+            "homesAuthorized": [
+                "AAAAAAAA",
+                "BBBBBBBB"
+            ]
+        }
+    ],
+    "invites": [
+        "03030303",
+        "04040404"
+    ]
+}
