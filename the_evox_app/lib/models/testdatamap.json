@@ -4,9 +4,55 @@
     "email": "user@test.com",
     "photo": "http://google.com",
     "countryCode": "MX",
-    "homes": [
-        {
-            "homeId": "AAAAAAAA",
+    "homes": {
+        "AAAAAAAA": {
+            "name": "Forest House",
+            "address": {
+                "address": "555 Oakroad, Winterforest",
+                "coords": "19N 19W 19.19",
+                "countryCode": "MX"
+            },
+            "images": [
+                "http://google.com/home1.jpg",
+                "http://google.com/home2.jpg"
+            ],
+            "rooms": {
+                "a1a1a1a1": {
+                    "name": "Living room",
+                    "picture": "http://google.com/home1room1.jpg",
+                    "powerUsage": 2535.0,
+                    "devices": {
+                        "aa11aa11": {
+                            "name": "Main light",
+                            "type": "Rgb Lamp",
+                            "controller": "controller1",
+                            "powerMeasure": 100.0
+                        },
+                        "aa11aa22": {
+                            "name": "Main light",
+                            "type": "Rgb Lamp",
+                            "controller": "controller1",
+                            "powerMeasure": 100.0
+                        }
+                    }
+                },
+                "a2a2a2a2": {
+                    "name": "Living room",
+                    "picture": "http://google.com/home1room1.jpg",
+                    "powerUsage": 2535.0,
+                    "devices": {
+                        "aa11aa11": {
+                            "deviceId": "aa11aa11",
+                            "name": "Main light",
+                            "type": "Rgb Lamp",
+                            "controller": "controller1",
+                            "powerMeasure": 100.0
+                        }
+                    }
+                }
+            }
+        },
+        "BBBBBBBB": {
             "name": "Forest House",
             "address": {
                 "address": "555 Oakroad, Winterforest",
@@ -35,7 +81,7 @@
                 }
             ]
         }
-    ],
+    },
     "autorizations": [
         {
             "guestId": "02020202",

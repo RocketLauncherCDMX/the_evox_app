@@ -74,6 +74,10 @@ class RoomModel {
     return 'RoomModel(roomId: $roomId, name: $name, picture: $picture, powerUsage: $powerUsage, devices: $devices)';
   }
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory RoomModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -87,15 +91,12 @@ class RoomModel {
       devices: (data?['devices'] != null)
           ? (data?['devices'] is Iterable
               ? List.from(data?['devices']
-                  .where((x) => {DeviceModel.fromFirestore(x, null)}))
+                  .where((x) => DeviceModel.fromFirestore(x, null)))
               : null)
           : null,
     );
   }
 
-  //*! **************** */
-  //*! Probably not necesary because of Firestore db.add() accepts .toMap results
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
       'roomId': roomId,

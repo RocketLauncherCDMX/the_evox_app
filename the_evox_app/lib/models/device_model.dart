@@ -55,6 +55,17 @@ class DeviceModel {
     );
   }
 
+  factory DeviceModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    return DeviceModel(
+      deviceId: index,
+      name: map['name'] as String,
+      type: map['type'] as String,
+      controller: Map<String, dynamic>.from(
+          (map['controller'] as Map<String, dynamic>)),
+      powerMeasure: map['powerMeasure'] as double,
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory DeviceModel.fromJson(String source) =>
@@ -65,23 +76,22 @@ class DeviceModel {
     return 'DeviceModel(deviceId: $deviceId, name: $name, type: $type, controller: $controller, powerMeasure: $powerMeasure)';
   }
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory DeviceModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
-    return DeviceModel(
-      deviceId: data?['deviceId'],
-      name: data?['name'],
-      type: data?['type'],
-      controller: Map.from(data?['controller']),
-      powerMeasure: data?['powerMeasure'],
+    final Map<String, dynamic>? data = snapshot.data();
+
+    return data!.values.first.map<DeviceModel>(
+      (x) => DeviceModel.fromIndexAndMap(
+          data.keys.first, x as Map<String, dynamic>),
     );
   }
 
-  //*! **************** */
-  //*! Probably not necesary because of Firestore db.add() accepts .toMap results
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
       'deviceId': deviceId,
