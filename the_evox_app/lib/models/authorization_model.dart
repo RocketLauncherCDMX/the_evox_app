@@ -34,7 +34,7 @@ class AuthorizationModel {
     return AuthorizationModel(
         guestId: map['guestId'] as String,
         homesAuthorized: List<String>.from(
-          (map['homesAuthorized'] as List<String>),
+          (map['homesAuthorized']),
         ));
   }
 

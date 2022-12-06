@@ -43,7 +43,8 @@ class RoomModel {
       'name': name,
       'picture': picture,
       'powerUsage': powerUsage,
-      'devices': devices != null ? devices!.map((x) => x.toMap()).toList() : null,
+      'devices':
+          devices != null ? devices!.map((x) => x.toMap()).toList() : null,
     };
   }
 
@@ -53,11 +54,13 @@ class RoomModel {
       name: map['name'] as String,
       picture: map['picture'] as String,
       powerUsage: map['powerUsage'] as double,
-      devices: List<DeviceModel>.from(
-        (map['devices'] as List).map<DeviceModel>(
-          (x) => DeviceModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      devices: (map['devices'] != null)
+          ? List<DeviceModel>.from(
+              (map['devices'] as List).map<DeviceModel>(
+                (x) => DeviceModel.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
     );
   }
 
@@ -81,9 +84,10 @@ class RoomModel {
       name: data?['name'],
       picture: data?['picture'],
       powerUsage: data?['powerUsage'],
-      devices: (data?['rooms'] != null)
+      devices: (data?['devices'] != null)
           ? (data?['devices'] is Iterable
-              ? List.from(data?['devices'].where((x) => {DeviceModel.fromFirestore(x, null)}))
+              ? List.from(data?['devices']
+                  .where((x) => {DeviceModel.fromFirestore(x, null)}))
               : null)
           : null,
     );
@@ -98,7 +102,9 @@ class RoomModel {
       'name': name,
       'picture': picture,
       'powerUsage': powerUsage,
-      'devices': devices != null ? devices!.map((x) => x.toFirestore()).toList() : null,
+      'devices': (devices != null)
+          ? devices!.map((x) => x.toFirestore()).toList()
+          : null,
     };
   }
 

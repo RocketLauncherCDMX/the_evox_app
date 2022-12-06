@@ -53,11 +53,13 @@ class HomeModel {
       name: map['name'] as String,
       location: Map.from(map['location'] as Map<String, dynamic>),
       images: List<String>.from(map['images'] as List<dynamic>),
-      rooms: List<RoomModel>.from(
-        (map['rooms'] as List).map<RoomModel>(
-          (x) => RoomModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      rooms: (map['rooms'] != null)
+          ? List<RoomModel>.from(
+              (map['rooms'] as List).map<RoomModel>(
+                (x) => RoomModel.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
     );
   }
 
@@ -83,7 +85,8 @@ class HomeModel {
       images: data?['images'] is Iterable ? List.from(data?['images']) : null,
       rooms: (data?['rooms'] != null) //If there is atleast one room in home
           ? (data?['rooms'] is Iterable
-              ? List.from(data?['devices'].where((x) => {RoomModel.fromFirestore(x, null)}))
+              ? List.from(data?['devices']
+                  .where((x) => {RoomModel.fromFirestore(x, null)}))
               : null)
           : null,
     );
@@ -98,7 +101,8 @@ class HomeModel {
       'name': name,
       'location': location,
       'images': images,
-      'rooms': rooms?.map((x) => x.toFirestore()).toList(),
+      'rooms':
+          (rooms != null) ? rooms!.map((x) => x.toFirestore()).toList() : null,
     };
   }
 
@@ -116,7 +120,11 @@ class HomeModel {
 
   @override
   int get hashCode {
-    return homeId.hashCode ^ name.hashCode ^ location.hashCode ^ images.hashCode ^ rooms.hashCode;
+    return homeId.hashCode ^
+        name.hashCode ^
+        location.hashCode ^
+        images.hashCode ^
+        rooms.hashCode;
   }
 
   factory HomeModel.getTestObject() {

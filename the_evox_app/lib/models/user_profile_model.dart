@@ -13,12 +13,12 @@ class UserProfile {
   final String email;
   final String photo;
   final String? countryCode;
-  late final List<HomeModel>? homes;
-  final List<AuthorizationModel>? authorizations;
-  final List<String>? invites;
+  late List<HomeModel>? homes;
+  late List<AuthorizationModel>? authorizations;
+  late List<String>? invites;
   late DateTime? created;
   late DateTime? modified;
-  final bool? verified;
+  late bool? verified;
   late String? profileDocId;
 
   UserProfile({
@@ -74,8 +74,9 @@ class UserProfile {
       'photo': photo,
       'countryCode': countryCode,
       'homes': (homes != null) ? homes!.map((x) => x.toMap()).toList() : null,
-      'autorizations':
-          (authorizations != null) ? authorizations!.map((x) => x.toMap()).toList() : null,
+      'authorizations': (authorizations != null)
+          ? authorizations!.map((x) => x.toMap()).toList()
+          : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,
@@ -91,16 +92,20 @@ class UserProfile {
         email: map['email'] as String,
         photo: map['photo'] as String,
         countryCode: map['countryCode'] as String,
-        homes: List<HomeModel>.from(
-          (map['homes'] as List<int>).map<HomeModel>(
-            (x) => HomeModel.fromMap(x as Map<String, dynamic>),
-          ),
-        ),
-        authorizations: List<AuthorizationModel>.from(
-          (map['autorizations'] as List<int>).map<AuthorizationModel>(
-            (x) => AuthorizationModel.fromMap(x as Map<String, dynamic>),
-          ),
-        ),
+        homes: (map['homes'] != null)
+            ? List<HomeModel>.from(
+                (map['homes'] as List<int>).map<HomeModel>(
+                  (x) => HomeModel.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+            : null,
+        authorizations: (map['authorizations'] != null)
+            ? List<AuthorizationModel>.from(
+                (map['authorizations'] as List<int>).map<AuthorizationModel>(
+                  (x) => AuthorizationModel.fromMap(x as Map<String, dynamic>),
+                ),
+              )
+            : null,
         invites: List<String>.from(
           (map['invites'] as List<String>),
         ),
@@ -117,7 +122,7 @@ class UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(userId: $userId, name: $name, email: $email, photo: $photo, countryCode: $countryCode, homes: $homes, autorizations: $authorizations, invites: $invites, created: $created, modified: $modified, verified: $verified, profileDocId: $profileDocId)';
+    return 'UserProfile(userId: $userId, name: $name, email: $email, photo: $photo, countryCode: $countryCode, homes: $homes, authorizations: $authorizations, invites: $invites, created: $created, modified: $modified, verified: $verified, profileDocId: $profileDocId)';
   }
 
   factory UserProfile.fromFirestore(
@@ -147,14 +152,19 @@ class UserProfile {
           ? (data?['authorizations'] is Iterable
               ? List.from(
                   (data?['authorizations'] as List).map<AuthorizationModel>(
-                    (x) => AuthorizationModel.fromMap(x as Map<String, dynamic>),
+                    (x) =>
+                        AuthorizationModel.fromMap(x as Map<String, dynamic>),
                   ),
                 )
               : null)
           : null,
-      invites: data?['invites'] is Iterable ? List.from(data?['invites']) : null,
-      created: DateTime.fromMicrosecondsSinceEpoch(auxCreated.millisecondsSinceEpoch),
-      modified: DateTime.fromMicrosecondsSinceEpoch(auxModified.millisecondsSinceEpoch),
+      invites: (data?['invites'] != null)
+          ? (data?['invites'] is Iterable ? List.from(data?['invites']) : null)
+          : null,
+      created: DateTime.fromMicrosecondsSinceEpoch(
+          auxCreated.millisecondsSinceEpoch),
+      modified: DateTime.fromMicrosecondsSinceEpoch(
+          auxModified.millisecondsSinceEpoch),
       verified: (data?['verified'] != null) ? data!['verified'] as bool : false,
       profileDocId: snapshot.id,
     );
@@ -172,9 +182,11 @@ class UserProfile {
       'email': email,
       'photo': photo,
       'countryCode': countryCode,
-      'homes': (homes != null) ? homes!.map((x) => x.toFirestore()).toList() : null,
-      'autorizations':
-          (authorizations != null) ? authorizations!.map((x) => x.toFirestoreMap()).toList() : null,
+      'homes':
+          (homes != null) ? homes!.map((x) => x.toFirestore()).toList() : null,
+      'authorizations': (authorizations != null)
+          ? authorizations!.map((x) => x.toFirestoreMap()).toList()
+          : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,

@@ -21,16 +21,16 @@ class UserHomeRepository {
   }
 
   //If insert succeed returns the timestamp of insertion, otherwise returns null
-  Future<bool> createHomeForUser(HomeModel newHomeData) async {
-    List<HomeModel> homeArranged = [];
+  Future<bool> createHome(HomeModel newHomeData) async {
+    List<dynamic> homeArranged = [];
     DateTime currentDt = DateTime.now();
 
     bool result;
 
-    homeArranged.add(newHomeData);
+    homeArranged.add(newHomeData.toFirestore());
 
     try {
-      await dbUsrProfileDoc?.update({
+      await dbUsrProfileDoc!.update({
         "homes": FieldValue.arrayUnion(homeArranged),
         "modified": currentDt
       });
@@ -43,14 +43,35 @@ class UserHomeRepository {
   }
 
   //If user
-  Future<bool> updateHomeForUser(HomeModel modifiedHomeData) async {
-    List<HomeModel> homeArranged = List.empty();
+  Future<bool> updateHome(
+    HomeModel currentHome,
+    HomeModel updatedHome,
+  ) async {
     DateTime currentDt = DateTime.now();
 
     try {
-      await dbUsrProfileDoc?.update({
-        "homes": FieldValue.arrayUnion(homeArranged),
-        "modified": currentDt
+      await dbUsrProfileDoc!.update({
+        "homes": FieldValue.arrayRemove([currentHome.toFirestore()]),
+      });
+      await dbUsrProfileDoc!.update({
+        "homes": FieldValue.arrayUnion([updatedHome.toFirestore()]),
+        "modified": currentDt,
+      });
+      _setRepositoryState(true, "", 0);
+      return true;
+    } on FirebaseException catch (e) {
+      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toString()}", 1);
+      return false;
+    }
+  }
+
+  Future<bool> deleteHome(HomeModel homeToDelete) async {
+    DateTime currentDt = DateTime.now();
+
+    try {
+      await dbUsrProfileDoc!.update({
+        "homes": FieldValue.arrayRemove([homeToDelete.toFirestore()]),
+        "modified": currentDt,
       });
       _setRepositoryState(true, "", 0);
       return true;
