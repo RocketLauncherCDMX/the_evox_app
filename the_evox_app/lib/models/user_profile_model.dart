@@ -93,11 +93,10 @@ class UserProfile {
         photo: map['photo'] as String,
         countryCode: map['countryCode'] as String,
         homes: (map['homes'] != null)
-            ? List<HomeModel>.from(
-                (map['homes'] as List<int>).map<HomeModel>(
-                  (x) => HomeModel.fromMap(x as Map<String, dynamic>),
-                ),
-              )
+            ? (map['homes'] is Iterable
+                ? List.from(
+                    map['homes'].where((x) => HomeModel.fromFirestore(x, null)))
+                : null)
             : null,
         authorizations: (map['authorizations'] != null)
             ? List<AuthorizationModel>.from(
@@ -182,10 +181,9 @@ class UserProfile {
       'email': email,
       'photo': photo,
       'countryCode': countryCode,
-      'homes':
-          (homes != null) ? homes!.map((x) => x.toFirestore()).toList() : null,
+      'homes': (homes != null) ? homes!.map((x) => x.toFirestore()) : null,
       'authorizations': (authorizations != null)
-          ? authorizations!.map((x) => x.toFirestoreMap()).toList()
+          ? authorizations!.map((x) => x.toFirestore()).toList()
           : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,

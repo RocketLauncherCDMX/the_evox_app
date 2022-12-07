@@ -91,7 +91,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                 child: const Text("Inserting Test"),
                                 onPressed: () async {
                                   /** Create not user-binded filled profile in db */
-                                  if (await _profileRepository
+                                  print(_createTestFilledProfile());
+                                  /*if (await _profileRepository
                                           .createUserProfile(
                                               _createTestFilledProfile()) !=
                                       null) {
@@ -99,7 +100,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                   } else {
                                     print(
                                         "ERROR: ${_profileRepository.errorMessage}");
-                                  }
+                                  }*/
                                 },
                               ),
                             ),
@@ -706,6 +707,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
     var userHomeRooms = [
       RoomModel(
           roomId: "a1a1a1a1",
+          type: "living",
           name: "Living room",
           picture: "http://google.com/home1room1.jpg",
           powerUsage: 2535.0,
@@ -741,7 +743,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
         invites: ["03030303", "04040404"],
         created: creationDt,
         modified: creationDt,
-        verified: false);
+        verified: true);
   }
 
   String getCustomUniqueId() {

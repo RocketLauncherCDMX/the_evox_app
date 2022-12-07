@@ -73,12 +73,21 @@ class HomeModel {
     return 'HomeModel(homeId: $homeId, name: $name, location: $location, images: $images, rooms: $rooms)';
   }
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory HomeModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
-    return HomeModel(
+    final Map<String, dynamic>? data = snapshot.data();
+
+    return data!.values.first.map<HomeModel>(
+      (x) =>
+          HomeModel.fromIndexAndMap(data.keys.first, x as Map<String, dynamic>),
+    );
+    /*return HomeModel(
       homeId: data?['homeId'],
       name: data?['name'],
       location: data?['location'],
@@ -89,20 +98,32 @@ class HomeModel {
                   .where((x) => {RoomModel.fromFirestore(x, null)}))
               : null)
           : null,
+    );*/
+  }
+
+  factory HomeModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    return HomeModel(
+      homeId: index,
+      name: map['name'] as String,
+      location: Map.from(map['location'] as Map<String, dynamic>),
+      images: List<String>.from(map['images'] as List<dynamic>),
+      rooms: (map['rooms'] != null)
+          ? (map['rooms'] is Iterable
+              ? List.from(
+                  map['rooms'].where((x) => RoomModel.fromFirestore(x, null)))
+              : null)
+          : null,
     );
   }
 
-  //*! **************** */
-  //*! Probably not necesary because of Firestore db.add() accepts .toMap results
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
-      'homeId': homeId,
-      'name': name,
-      'location': location,
-      'images': images,
-      'rooms':
-          (rooms != null) ? rooms!.map((x) => x.toFirestore()).toList() : null,
+      homeId: <String, dynamic>{
+        'name': name,
+        'location': location,
+        'images': images,
+        'rooms': (rooms != null) ? rooms!.map((x) => x.toFirestore()) : null,
+      }
     };
   }
 

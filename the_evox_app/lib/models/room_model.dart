@@ -8,6 +8,7 @@ import 'device_model.dart';
 
 class RoomModel {
   final String roomId;
+  final String type;
   final String name;
   final String picture;
   final double powerUsage;
@@ -15,6 +16,7 @@ class RoomModel {
 
   RoomModel({
     required this.roomId,
+    required this.type,
     required this.name,
     required this.picture,
     required this.powerUsage,
@@ -23,6 +25,7 @@ class RoomModel {
 
   RoomModel copyWith({
     String? roomId,
+    String? type,
     String? name,
     String? picture,
     double? powerUsage,
@@ -30,6 +33,7 @@ class RoomModel {
   }) {
     return RoomModel(
       roomId: roomId ?? this.roomId,
+      type: type ?? this.type,
       name: name ?? this.name,
       picture: picture ?? this.picture,
       powerUsage: powerUsage ?? this.powerUsage,
@@ -40,6 +44,7 @@ class RoomModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'roomId': roomId,
+      'type': type,
       'name': name,
       'picture': picture,
       'powerUsage': powerUsage,
@@ -51,6 +56,7 @@ class RoomModel {
   factory RoomModel.fromMap(Map<String, dynamic> map) {
     return RoomModel(
       roomId: map['roomId'] as String,
+      type: map['type'] as String,
       name: map['name'] as String,
       picture: map['picture'] as String,
       powerUsage: map['powerUsage'] as double,
@@ -71,7 +77,7 @@ class RoomModel {
 
   @override
   String toString() {
-    return 'RoomModel(roomId: $roomId, name: $name, picture: $picture, powerUsage: $powerUsage, devices: $devices)';
+    return 'RoomModel(roomId: $roomId, type: $type, name: $name, picture: $picture, powerUsage: $powerUsage, devices: $devices)';
   }
 
   //** **************** */
@@ -82,8 +88,13 @@ class RoomModel {
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
-    return RoomModel(
+    final Map<String, dynamic>? data = snapshot.data();
+
+    return data!.values.first.map<RoomModel>(
+      (x) =>
+          RoomModel.fromIndexAndMap(data.keys.first, x as Map<String, dynamic>),
+    );
+    /*return RoomModel(
       roomId: data?['roomId'],
       name: data?['name'],
       picture: data?['picture'],
@@ -94,18 +105,35 @@ class RoomModel {
                   .where((x) => DeviceModel.fromFirestore(x, null)))
               : null)
           : null,
+    );*/
+  }
+
+  factory RoomModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    return RoomModel(
+      roomId: index,
+      type: map['type'] as String,
+      name: map['name'] as String,
+      picture: map['picture'] as String,
+      powerUsage: map['powerUsage'] as double,
+      devices: (map['devices'] != null)
+          ? (map['devices'] is Iterable
+              ? List.from(map['devices']
+                  .where((x) => DeviceModel.fromFirestore(x, null)))
+              : null)
+          : null,
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
-      'roomId': roomId,
-      'name': name,
-      'picture': picture,
-      'powerUsage': powerUsage,
-      'devices': (devices != null)
-          ? devices!.map((x) => x.toFirestore()).toList()
-          : null,
+      roomId: <String, dynamic>{
+        'name': name,
+        'type': type,
+        'picture': picture,
+        'powerUsage': powerUsage,
+        'devices':
+            (devices != null) ? devices!.map((x) => x.toFirestore()) : null,
+      }
     };
   }
 
@@ -115,6 +143,7 @@ class RoomModel {
     final listEquals = const DeepCollectionEquality().equals;
 
     return other.roomId == roomId &&
+        other.type == type &&
         other.name == name &&
         other.picture == picture &&
         other.powerUsage == powerUsage &&
@@ -124,6 +153,7 @@ class RoomModel {
   @override
   int get hashCode {
     return roomId.hashCode ^
+        type.hashCode ^
         name.hashCode ^
         picture.hashCode ^
         powerUsage.hashCode ^

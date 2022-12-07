@@ -61,7 +61,7 @@ class AuthorizationModel {
   //*! **************** */
   //*! Probably not necesary because of Firestore db.add() accepts .toMap results
   //*! **************** */
-  Map<String, dynamic> toFirestoreMap() {
+  Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
       'guestId': guestId,
       'homesAuthorized': homesAuthorized,

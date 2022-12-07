@@ -30,6 +30,7 @@ final StateProvider<int> lengthProvider = StateProvider(((ref) => 0));
 var userRoomProvider = Provider<RoomModel>((ref) {
   RoomModel myRoom = RoomModel(
       roomId: '4590854',
+      type: 'living',
       name: 'LivingRoom',
       picture:
           'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/living-room-ideas-hbx060122inspoopener-004-1657042789.jpg?crop=0.858xw:1.00xh;0.0452xw,0&resize=980:*',
@@ -41,6 +42,7 @@ var userRoomProvider = Provider<RoomModel>((ref) {
 var userRoom2Provider = Provider<RoomModel>((ref) {
   RoomModel myRoom = RoomModel(
       roomId: '12345',
+      type: 'kitchen',
       name: 'Kitchen',
       picture:
           'https://www.bhg.com/thmb/rfB_8xN37Df52T-zEulT16V2vMo=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-kitchen-floating-shelves-232ac9fb-fad090ab1f73478589de35a4e9b3b1e9.jpg',
@@ -52,6 +54,7 @@ var userRoom2Provider = Provider<RoomModel>((ref) {
 List userHomeRooms = [
   RoomModel(
       roomId: "a1a1a1a1",
+      type: "living",
       name: "Living room",
       picture: "http://google.com/home1room1.jpg",
       powerUsage: 2535.0,
