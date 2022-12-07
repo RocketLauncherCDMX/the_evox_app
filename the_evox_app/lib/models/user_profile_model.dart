@@ -74,9 +74,8 @@ class UserProfile {
       'photo': photo,
       'countryCode': countryCode,
       'homes': (homes != null) ? homes!.map((x) => x.toMap()).toList() : null,
-      'authorizations': (authorizations != null)
-          ? authorizations!.map((x) => x.toMap()).toList()
-          : null,
+      'authorizations':
+          (authorizations != null) ? authorizations!.map((x) => x.toMap()).toList() : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,
@@ -152,8 +151,7 @@ class UserProfile {
           ? (data?['authorizations'] is Iterable
               ? List.from(
                   (data?['authorizations'] as List).map<AuthorizationModel>(
-                    (x) =>
-                        AuthorizationModel.fromMap(x as Map<String, dynamic>),
+                    (x) => AuthorizationModel.fromMap(x as Map<String, dynamic>),
                   ),
                 )
               : null)
@@ -161,10 +159,8 @@ class UserProfile {
       invites: (data?['invites'] != null)
           ? (data?['invites'] is Iterable ? List.from(data?['invites']) : null)
           : null,
-      created: DateTime.fromMicrosecondsSinceEpoch(
-          auxCreated.millisecondsSinceEpoch),
-      modified: DateTime.fromMicrosecondsSinceEpoch(
-          auxModified.millisecondsSinceEpoch),
+      created: DateTime.fromMicrosecondsSinceEpoch(auxCreated.millisecondsSinceEpoch),
+      modified: DateTime.fromMicrosecondsSinceEpoch(auxModified.millisecondsSinceEpoch),
       verified: (data?['verified'] != null) ? data!['verified'] as bool : false,
       profileDocId: snapshot.id,
     );
@@ -182,11 +178,9 @@ class UserProfile {
       'email': email,
       'photo': photo,
       'countryCode': countryCode,
-      'homes':
-          (homes != null) ? homes!.map((x) => x.toFirestore()).toList() : null,
-      'authorizations': (authorizations != null)
-          ? authorizations!.map((x) => x.toFirestoreMap()).toList()
-          : null,
+      'homes': (homes != null) ? homes!.map((x) => x.toFirestore()).toList() : null,
+      'authorizations':
+          (authorizations != null) ? authorizations!.map((x) => x.toFirestoreMap()).toList() : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,

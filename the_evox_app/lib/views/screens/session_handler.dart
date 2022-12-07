@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
 
 final sessionProvider = Provider<bool>((ref) {
-  return true;
+  return false;
 });
 
 class SessionHandler extends ConsumerWidget {
@@ -12,6 +12,6 @@ class SessionHandler extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isUserLogged = ref.watch(sessionProvider);
-    return isUserLogged ? const MyHome() : const LoginForm();
+    return isUserLogged ? const MyHome() : const Tours01();
   }
 }

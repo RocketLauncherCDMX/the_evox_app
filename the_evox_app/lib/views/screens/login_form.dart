@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:the_evox_app/models/user_profile_model.dart';
+import 'package:the_evox_app/providers/user_provider.dart';
+import 'package:the_evox_app/views/screens/register_form.dart';
 import 'package:the_evox_app/views/widgets/rounded_black_button.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  ConsumerState<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   bool _obscureText = true;
   final _userEmail = TextEditingController();
   final _userPassword = TextEditingController();
@@ -43,12 +46,13 @@ class _LoginFormState extends State<LoginForm> {
                   height: 50,
                   child: OutlinedButton(
                       style: ButtonStyle(
-                          shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0),
                                   side: const BorderSide(color: Colors.grey)))),
-                      onPressed: () => {},
+                      onPressed: () => {
+                            Navigator.pop(context),
+                          },
                       child: const Icon(
                         Icons.arrow_back_ios_new,
                         color: Colors.grey,
@@ -78,8 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                   fillColor: Colors.grey.shade200,
                   hintText: 'Email',
                   //suffixIcon: const Icon(Icons.email_outlined),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(25.7),
@@ -103,8 +106,7 @@ class _LoginFormState extends State<LoginForm> {
                   filled: true,
                   fillColor: Colors.grey.shade200,
                   hintText: 'Password',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(25.7),
@@ -159,13 +161,9 @@ class _LoginFormState extends State<LoginForm> {
                     return ElevatedButton(
                         onPressed: () {},
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.grey.shade300),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(25.0)))),
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade300),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                         child: Image.asset('assets/icons/goggle_logo.png'));
                   }),
                 ),
@@ -176,13 +174,9 @@ class _LoginFormState extends State<LoginForm> {
                   child: ElevatedButton(
                       onPressed: () => {},
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.blue.shade700),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(25.0)))),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade700),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                       child: Image.asset(
                         'assets/icons/fb_logo.png',
                         width: 35,
@@ -197,13 +191,9 @@ class _LoginFormState extends State<LoginForm> {
                   child: ElevatedButton(
                       onPressed: () => {},
                       style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.black),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(25.0)))),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                       child: Image.asset('assets/icons/apple_logo.png')),
                 ),
               ],
@@ -219,7 +209,10 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   child: const Text('Register'),
                   onPressed: () => {
-                    Navigator.pushReplacementNamed(context, 'register'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterForm()),
+                    ),
                   },
                 )
               ],

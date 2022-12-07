@@ -81,7 +81,12 @@ class Tours01 extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             BlackButton(
-              onPressed: () => {Navigator.of(context).push(_createRoute(const Tours02()))},
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Tours02()),
+                ),
+              },
               text: 'Next',
             ),
             const SizedBox(height: 10.0),
@@ -96,29 +101,14 @@ class Tours01 extends StatelessWidget {
                 ),
               ),
               onPressed: () => {
-                Navigator.pushReplacementNamed(context, 'login'),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginForm()),
+                ),
               },
             ),
             const SizedBox(height: 20),
           ],
         ),
       ));
-}
-
-Route _createRoute(Widget screen) {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => screen,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      const begin = Offset(1.0, 0.0);
-      const end = Offset.zero;
-      const curve = Curves.ease;
-
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-      return SlideTransition(
-        position: animation.drive(tween),
-        child: child,
-      );
-    },
-  );
 }

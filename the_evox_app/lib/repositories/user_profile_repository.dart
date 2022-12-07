@@ -32,8 +32,7 @@ class UserProfileRepository {
       _setRepositoryState(true, "", 0);
     } on FirebaseException catch (e) {
       docCreatedId = null;
-      _setRepositoryState(
-          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 400);
+      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 400);
     }
     return docCreatedId;
   }
@@ -61,8 +60,7 @@ class UserProfileRepository {
       }
     } on FirebaseException catch (e) {
       profileData = null;
-      _setRepositoryState(
-          false, "FIREBASE CONN ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(false, "FIREBASE CONN ERROR: ${e.message!.toLowerCase()}", 1);
     }
     return profileData;
   }
@@ -103,8 +101,7 @@ class UserProfileRepository {
       );
       return updatedProfile;
     } on FirebaseException catch (e) {
-      _setRepositoryState(
-          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
       return currentProfile;
     }
   }
@@ -119,8 +116,7 @@ class UserProfileRepository {
       _setRepositoryState(true, "", 0);
       return true;
     } on FirebaseException catch (e) {
-      _setRepositoryState(
-          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
       return false;
     }
   }
@@ -129,8 +125,7 @@ class UserProfileRepository {
 //This 'repository state setter' method must be used before every
 //posible result of each method ends
 //* @param _status true for success on method, false for fail on method
-  void _setRepositoryState(
-      bool _status, String _errorMessage, int? _errorCode) {
+  void _setRepositoryState(bool _status, String _errorMessage, int? _errorCode) {
     status = _status;
     errorMessage = _errorMessage;
     errorCode = _errorCode;

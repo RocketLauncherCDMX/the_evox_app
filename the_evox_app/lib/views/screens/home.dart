@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
-import 'package:the_evox_app/providers/signed_user_provider.dart';
+import 'package:the_evox_app/providers/user_provider.dart';
 import 'package:the_evox_app/views/screens/add_room.dart';
 import 'package:the_evox_app/views/widgets/room_card.dart';
 
@@ -313,7 +313,8 @@ class _MyHomeState extends ConsumerState<MyHome> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 30),
-              child: _rooms == 0 ? noRoomsWidget() : createRoomCard(ref.read(userRoom2Provider)),
+              //child: _rooms == 0 ? noRoomsWidget() : createRoomCard(ref.read(userHomeRooms)),
+              child: noRoomsWidget(),
             ),
           ],
         ),

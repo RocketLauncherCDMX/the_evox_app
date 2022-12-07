@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_evox_app/views/screens/login_form.dart';
+import 'package:the_evox_app/views/screens/screens.dart';
 import 'package:the_evox_app/views/widgets/rounded_black_button.dart';
 
 class Tours03 extends StatelessWidget {
@@ -34,25 +34,21 @@ class Tours03 extends StatelessWidget {
               height: 50,
               width: 150,
               decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(30)),
+                  color: Colors.purpleAccent, borderRadius: BorderRadius.circular(30)),
               alignment: Alignment.center,
               child: const Text(
-                'Functionality',
+                'Accesibility',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
               ),
             ),
             const SizedBox(height: 20),
             const Text(
-              'Smarter life with',
+              'Give family access',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
             ),
             const Text(
-              'smart device',
+              'to your devices',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
             ),
             const SizedBox(
@@ -78,22 +74,21 @@ class Tours03 extends StatelessWidget {
                   Container(
                     width: 40.0,
                     height: 3.0,
-                    color: Colors.deepPurple,
+                    color: Colors.purpleAccent,
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 30),
             BlackButton(
-                onPressed: () => {
-                      Navigator.pushReplacement<void, void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const LoginForm(),
-                        ),
-                      ),
-                    },
-                text: 'Login'),
+              onPressed: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginForm()),
+                ),
+              },
+              text: 'Login',
+            ),
             const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +100,10 @@ class Tours03 extends StatelessWidget {
                   ),
                   child: const Text('Register'),
                   onPressed: () => {
-                    Navigator.pushReplacementNamed(context, 'register'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterForm()),
+                    ),
                   },
                 )
               ],
