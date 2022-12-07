@@ -124,11 +124,33 @@ class UserProfile {
     return 'UserProfile(userId: $userId, name: $name, email: $email, photo: $photo, countryCode: $countryCode, homes: $homes, authorizations: $authorizations, invites: $invites, created: $created, modified: $modified, verified: $verified, profileDocId: $profileDocId)';
   }
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory UserProfile.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
+    List<HomeModel>? homesList;
+    List<AuthorizationModel>? authorizationsList;
+
+    if (data?['homes'] != null) {
+      homesList = [];
+      data?['homes'].forEach((key, value) {
+        homesList!
+            .add(HomeModel.fromIndexAndMap(key, value as Map<String, dynamic>));
+      });
+    }
+    if (data?['homes'] != null) {
+      authorizationsList = [];
+      data?['authorizations'].forEach((key, value) {
+        authorizationsList!.add(
+            AuthorizationModel.fromIndexAndMap(key, value as List<dynamic>));
+      });
+    }
+
     Timestamp auxCreated = data?['created'];
     Timestamp auxModified = data?['modified'];
     //print(data?['homes']);
@@ -138,25 +160,8 @@ class UserProfile {
       email: data?['email'],
       photo: data?['photo'],
       countryCode: data?['countryCode'],
-      homes: (data?['homes'] != null)
-          ? (data?['homes'] is Iterable
-              ? List.from(
-                  (data?['homes'] as List).map<HomeModel>(
-                    (x) => HomeModel.fromMap(x as Map<String, dynamic>),
-                  ),
-                )
-              : null)
-          : null,
-      authorizations: (data?['authorizations'] != null)
-          ? (data?['authorizations'] is Iterable
-              ? List.from(
-                  (data?['authorizations'] as List).map<AuthorizationModel>(
-                    (x) =>
-                        AuthorizationModel.fromMap(x as Map<String, dynamic>),
-                  ),
-                )
-              : null)
-          : null,
+      homes: homesList,
+      authorizations: authorizationsList,
       invites: (data?['invites'] != null)
           ? (data?['invites'] is Iterable ? List.from(data?['invites']) : null)
           : null,
@@ -170,21 +175,29 @@ class UserProfile {
     return userMapped;
   }
 
-  //*! **************** */
-  //*! Simmilar to .toMap() method that keeps out profilDocId member
-  //*! Used as parameter for method .withConverter() of Firestore .get() */
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
+    late Map<String, dynamic> homesToFirestore;
+    late Map<String, dynamic> authorizationsToFirestore;
+    if (homes != null) {
+      homesToFirestore = {};
+      for (var homeItem in homes!) {
+        homesToFirestore.addAll(homeItem.toFirestore());
+      }
+    }
+    if (authorizations != null) {
+      authorizationsToFirestore = {};
+      for (var authorizationItem in authorizations!) {
+        authorizationsToFirestore.addAll(authorizationItem.toFirestore());
+      }
+    }
     return {
       'userId': userId,
       'name': name,
       'email': email,
       'photo': photo,
       'countryCode': countryCode,
-      'homes': (homes != null) ? homes!.map((x) => x.toFirestore()) : null,
-      'authorizations': (authorizations != null)
-          ? authorizations!.map((x) => x.toFirestore()).toList()
-          : null,
+      'homes': homesToFirestore,
+      'authorizations': authorizationsToFirestore,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,

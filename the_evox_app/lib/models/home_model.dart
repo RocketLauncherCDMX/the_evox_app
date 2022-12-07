@@ -102,27 +102,39 @@ class HomeModel {
   }
 
   factory HomeModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    List<RoomModel>? roomsList;
+
+    if (map['rooms'] != null) {
+      roomsList = [];
+      map['rooms'].forEach((key, value) {
+        roomsList!
+            .add(RoomModel.fromIndexAndMap(key, value as Map<String, dynamic>));
+      });
+    }
+
     return HomeModel(
       homeId: index,
       name: map['name'] as String,
       location: Map.from(map['location'] as Map<String, dynamic>),
       images: List<String>.from(map['images'] as List<dynamic>),
-      rooms: (map['rooms'] != null)
-          ? (map['rooms'] is Iterable
-              ? List.from(
-                  map['rooms'].where((x) => RoomModel.fromFirestore(x, null)))
-              : null)
-          : null,
+      rooms: roomsList,
     );
   }
 
   Map<String, dynamic> toFirestore() {
+    late Map<String, dynamic> roomsToFirestore;
+    if (rooms != null) {
+      roomsToFirestore = {};
+      for (var roomItem in rooms!) {
+        roomsToFirestore.addAll(roomItem.toFirestore());
+      }
+    }
     return <String, dynamic>{
       homeId: <String, dynamic>{
         'name': name,
         'location': location,
         'images': images,
-        'rooms': (rooms != null) ? rooms!.map((x) => x.toFirestore()) : null,
+        'rooms': roomsToFirestore,
       }
     };
   }

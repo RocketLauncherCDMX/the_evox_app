@@ -91,16 +91,15 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                 child: const Text("Inserting Test"),
                                 onPressed: () async {
                                   /** Create not user-binded filled profile in db */
-                                  print(_createTestFilledProfile());
-                                  /*if (await _profileRepository
-                                          .createUserProfile(
-                                              _createTestFilledProfile()) !=
+                                  var tmpProfile = _createTestFilledProfile();
+                                  if (await _profileRepository
+                                          .createUserProfile(tmpProfile) !=
                                       null) {
                                     print("PROFILE CREATED");
                                   } else {
                                     print(
                                         "ERROR: ${_profileRepository.errorMessage}");
-                                  }*/
+                                  }
                                 },
                               ),
                             ),
@@ -135,7 +134,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                           await _firebaseAuth
                                               .createUserWithEmailAndPassword(
                                                   email:
-                                                      'jorgegarcia@gmail.com',
+                                                      'garcamcoder@gmail.com',
                                                   password: "12345678");
 
                                       /** If no error throwned
@@ -146,9 +145,10 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                  * binded to user authenticated */
                                       UserProfile newUserProfile =
                                           _createTestFilledProfile(
-                                              testName: newUserInfo!.displayName
-                                                  .toString(),
-                                              testAuthId: newUserInfo.uid);
+                                              testName: "George Garcam",
+                                              testAuthId: newUserInfo!.uid,
+                                              testEmail:
+                                                  newUserInfo.email.toString());
 
                                       /** Create a user profile in DB from previous filledup
                                  * object and stores the ID of created db doc */
@@ -208,7 +208,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                           await _firebaseAuth
                                               .signInWithEmailAndPassword(
                                                   email:
-                                                      'jorgegarcia@gmail.com',
+                                                      'garcamcoder@gmail.com',
                                                   password: "12345678");
 
                                       /** Trying to retrive the profile from DB using

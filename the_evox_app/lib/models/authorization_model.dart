@@ -47,24 +47,37 @@ class AuthorizationModel {
   String toString() =>
       'Authorization(guestId: $guestId, homesAuthorized: $homesAuthorized)';
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory AuthorizationModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
+    final Map<String, dynamic>? data = snapshot.data();
+
+    return data!.values.first.map<AuthorizationModel>(
+      (x) => AuthorizationModel.fromIndexAndMap(
+          data.keys.first, x as List<String>),
+    );
+    /*
     return AuthorizationModel(
       guestId: data?['guestId'],
       homesAuthorized: List.from(data?['homesAuthorized']),
+    );*/
+  }
+
+  factory AuthorizationModel.fromIndexAndMap(String index, List<dynamic> map) {
+    return AuthorizationModel(
+      guestId: index,
+      homesAuthorized: List<String>.from(map),
     );
   }
 
-  //*! **************** */
-  //*! Probably not necesary because of Firestore db.add() accepts .toMap results
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
     return <String, dynamic>{
-      'guestId': guestId,
-      'homesAuthorized': homesAuthorized,
+      guestId: homesAuthorized,
     };
   }
 

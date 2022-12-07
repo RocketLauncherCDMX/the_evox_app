@@ -109,30 +109,40 @@ class RoomModel {
   }
 
   factory RoomModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    List<DeviceModel>? devicesList;
+
+    if (map['devices'] != null) {
+      devicesList = [];
+      map['devices'].forEach((key, value) {
+        devicesList!.add(
+            DeviceModel.fromIndexAndMap(key, value as Map<String, dynamic>));
+      });
+    }
     return RoomModel(
       roomId: index,
       type: map['type'] as String,
       name: map['name'] as String,
       picture: map['picture'] as String,
       powerUsage: map['powerUsage'] as double,
-      devices: (map['devices'] != null)
-          ? (map['devices'] is Iterable
-              ? List.from(map['devices']
-                  .where((x) => DeviceModel.fromFirestore(x, null)))
-              : null)
-          : null,
+      devices: devicesList,
     );
   }
 
   Map<String, dynamic> toFirestore() {
+    late Map<String, dynamic> devicesToFirestore;
+    if (devices != null) {
+      devicesToFirestore = {};
+      for (var deviceItem in devices!) {
+        devicesToFirestore.addAll(deviceItem.toFirestore());
+      }
+    }
     return <String, dynamic>{
       roomId: <String, dynamic>{
         'name': name,
         'type': type,
         'picture': picture,
         'powerUsage': powerUsage,
-        'devices':
-            (devices != null) ? devices!.map((x) => x.toFirestore()) : null,
+        'devices': devicesToFirestore,
       }
     };
   }
