@@ -588,9 +588,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                             rooms:
                                                 signedProfile!.homes![1].rooms);
                                         try {
-                                          await _homeRepository!.updateHome(
-                                              signedProfile!.homes![1],
-                                              updatedHome);
+                                          await _homeRepository!
+                                              .updateHome(updatedHome);
 
                                           if (_homeRepository!.status) {
                                             signedProfile!.homes![1] =
@@ -646,7 +645,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                             (signedProfile!.homes!.length - 1)];
                                         try {
                                           await _homeRepository!
-                                              .deleteHome(home2Delete);
+                                              .deleteHome(home2Delete.homeId);
 
                                           if (_homeRepository!.status) {
                                             signedProfile!.homes!

@@ -129,12 +129,14 @@ class RoomModel {
   }
 
   Map<String, dynamic> toFirestore() {
-    late Map<String, dynamic> devicesToFirestore;
+    late Map<String, dynamic>? devicesToFirestore;
     if (devices != null) {
       devicesToFirestore = {};
       for (var deviceItem in devices!) {
         devicesToFirestore.addAll(deviceItem.toFirestore());
       }
+    } else {
+      devicesToFirestore = null;
     }
     return <String, dynamic>{
       roomId: <String, dynamic>{

@@ -41,17 +41,15 @@ class UserHomeRepository {
 
   //If user
   Future<bool> updateHome(
-    HomeModel currentHome,
     HomeModel updatedHome,
   ) async {
     DateTime currentDt = DateTime.now();
 
+    final homeMapped = updatedHome.toFirestore();
+
     try {
       await dbUsrProfileDoc!.update({
-        "homes": FieldValue.arrayRemove([currentHome.toFirestore()]),
-      });
-      await dbUsrProfileDoc!.update({
-        "homes": FieldValue.arrayUnion([updatedHome.toFirestore()]),
+        "homes.${homeMapped.keys.first}": homeMapped.values.first,
         "modified": currentDt,
       });
       _setRepositoryState(true, "", 0);
@@ -62,12 +60,12 @@ class UserHomeRepository {
     }
   }
 
-  Future<bool> deleteHome(HomeModel homeToDelete) async {
+  Future<bool> deleteHome(String homeToDeleteId) async {
     DateTime currentDt = DateTime.now();
 
     try {
       await dbUsrProfileDoc!.update({
-        "homes": FieldValue.arrayRemove([homeToDelete.toFirestore()]),
+        "homes.$homeToDeleteId": FieldValue.delete(),
         "modified": currentDt,
       });
       _setRepositoryState(true, "", 0);
