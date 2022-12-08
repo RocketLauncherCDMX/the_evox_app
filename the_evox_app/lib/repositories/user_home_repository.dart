@@ -22,16 +22,13 @@ class UserHomeRepository {
 
   //If insert succeed returns the timestamp of insertion, otherwise returns null
   Future<bool> createHome(HomeModel newHomeData) async {
-    List<dynamic> homeArranged = [];
     DateTime currentDt = DateTime.now();
 
-    bool result;
-
-    homeArranged.add(newHomeData.toFirestore());
+    final homeMapped = newHomeData.toFirestore();
 
     try {
       await dbUsrProfileDoc!.update({
-        "homes": FieldValue.arrayUnion(homeArranged),
+        "homes.${homeMapped.keys.first}": homeMapped.values.first,
         "modified": currentDt
       });
       _setRepositoryState(true, "", 0);
