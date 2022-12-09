@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intl/intl.dart';
+import 'package:the_evox_app/repositories/devices_repository.dart';
+import 'package:the_evox_app/repositories/rooms_repository.dart';
 import 'package:the_evox_app/repositories/user_home_repository.dart';
 
 import 'package:the_evox_app/repositories/user_profile_repository.dart';
@@ -24,7 +27,10 @@ class TestingrepoScreen extends StatefulWidget {
 class _TestingrepoScreenState extends State<TestingrepoScreen> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserProfileRepository _profileRepository = UserProfileRepository();
-  UserHomeRepository? _homeRepository;
+  final DateFormat dateformatter = DateFormat('yMdHms');
+  UserHomeRepository? _homesRepository;
+  RoomsRepository? _roomsRepository;
+  DevicesRepository? _devicesRepository;
 
   UserProfile? signedProfile;
   _TestingrepoScreenState() {
@@ -161,7 +167,13 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                      * was successfully created and stores
                                      * the locally created profile in global var */
                                         signedProfile = newUserProfile;
-                                        _homeRepository = UserHomeRepository(
+                                        _homesRepository = UserHomeRepository(
+                                            userProfileDocId:
+                                                signedProfile!.profileDocId!);
+                                        _roomsRepository = RoomsRepository(
+                                            userProfileDocId:
+                                                signedProfile!.profileDocId!);
+                                        _devicesRepository = DevicesRepository(
                                             userProfileDocId:
                                                 signedProfile!.profileDocId!);
                                       } else {
@@ -222,7 +234,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         print(
                                             "User signed: ${signedProfile!.name}");
                                         print(signedProfile);
-                                        _homeRepository = UserHomeRepository(
+                                        _homesRepository = UserHomeRepository(
                                             userProfileDocId:
                                                 signedProfile!.profileDocId!);
                                       } else {
@@ -257,7 +269,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                             print(
                                                 "User profile created for: ${newUserProfile.name}");
                                             signedProfile = newUserProfile;
-                                            _homeRepository =
+                                            _homesRepository =
                                                 UserHomeRepository(
                                                     userProfileDocId:
                                                         signedProfile!
@@ -470,7 +482,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                 child: const Text("SignOut"),
                                 onPressed: () {
                                   signedProfile = null;
-                                  _homeRepository = null;
+                                  _homesRepository = null;
                                   _firebaseAuth.signOut();
                                 },
                               ),
@@ -497,9 +509,9 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                           /********** HOMES OPERATIONS **********/
                           //BUTTON COMPONENT
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
-                              height: 50,
+                              height: 45,
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
@@ -533,15 +545,15 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         rooms: null);
 
                                     try {
-                                      await _homeRepository!
+                                      await _homesRepository!
                                           .createHome(newHome);
 
-                                      if (_homeRepository!.status) {
+                                      if (_homesRepository!.status) {
                                         signedProfile!.homes!.add(newHome);
                                         print(
                                             "Home added, current homes:${signedProfile!.homes!.length}");
                                       } else {
-                                        print(_homeRepository!.errorMessage);
+                                        print(_homesRepository!.errorMessage);
                                       }
                                     } on Exception catch (e) {
                                       print(e.toString());
@@ -556,9 +568,9 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                           //END BUTTON COMPONENT
                           //BUTTON COMPONENT
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
-                              height: 50,
+                              height: 45,
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
@@ -588,17 +600,17 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                             rooms:
                                                 signedProfile!.homes![1].rooms);
                                         try {
-                                          await _homeRepository!
+                                          await _homesRepository!
                                               .updateHome(updatedHome);
 
-                                          if (_homeRepository!.status) {
+                                          if (_homesRepository!.status) {
                                             signedProfile!.homes![1] =
                                                 updatedHome;
                                             print(
                                                 "Home updated added 1 image, current qty:${signedProfile!.homes![1].images!.length}");
                                           } else {
                                             print(
-                                                _homeRepository!.errorMessage);
+                                                _homesRepository!.errorMessage);
                                           }
                                         } on Exception catch (e) {
                                           print(e.toString());
@@ -621,9 +633,9 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                           //END BUTTON COMPONENT
                           //BUTTON COMPONENT
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 20),
+                            padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
-                              height: 50,
+                              height: 45,
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
@@ -644,17 +656,17 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                                 .homes![
                                             (signedProfile!.homes!.length - 1)];
                                         try {
-                                          await _homeRepository!
+                                          await _homesRepository!
                                               .deleteHome(home2Delete.homeId);
 
-                                          if (_homeRepository!.status) {
+                                          if (_homesRepository!.status) {
                                             signedProfile!.homes!
                                                 .remove(home2Delete);
                                             print(
                                                 "Home deleted, current homes:${signedProfile!.homes!.length}");
                                           } else {
                                             print(
-                                                _homeRepository!.errorMessage);
+                                                _homesRepository!.errorMessage);
                                           }
                                         } on Exception catch (e) {
                                           print(e.toString());
@@ -676,6 +688,207 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                           ),
                           //END BUTTON COMPONENT
                           /********** HOMES OPERATIONS **********/
+                          /********** ROOMS OPERATIONS **********/
+                          //BUTTON COMPONENT
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade600)),
+                                child: const Text("Add Room to home2"),
+                                onPressed: () async {
+                                  if (signedProfile != null) {
+                                    if (signedProfile!.homes == null) {
+                                      signedProfile!.homes = [];
+                                    }
+                                    if (signedProfile!.homes!.length >= 2) {
+                                      RoomModel newRoom = RoomModel(
+                                        roomId: getCustomUniqueId(),
+                                        type: 'bedroom',
+                                        name:
+                                            'My room ${dateformatter.format(DateTime.now())}',
+                                        picture: 'https://google.com',
+                                        powerUsage: 20.1,
+                                        devices: null,
+                                      );
+
+                                      try {
+                                        await _roomsRepository!.createRoom(
+                                          newRoom,
+                                          signedProfile!.homes![1].homeId,
+                                        );
+
+                                        if (_roomsRepository!.status) {
+                                          signedProfile!.homes![1].rooms!
+                                              .add(newRoom);
+                                          print(
+                                              "Room added to 2nd home, current rooms:${signedProfile!.homes![1].rooms!.length}");
+                                        } else {
+                                          print(_roomsRepository!.errorMessage);
+                                        }
+                                      } on Exception catch (e) {
+                                        print(e.toString());
+                                      }
+                                    } else {
+                                      print(
+                                          "Not enough homes, Add at least 2 to perform room add to 2nd home");
+                                    }
+                                  } else {
+                                    print("Logged user not found");
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          //END BUTTON COMPONENT
+                          //BUTTON COMPONENT
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade600)),
+                                child: const Text("Update room n.2"),
+                                onPressed: () async {
+                                  if (signedProfile != null) {
+                                    if (signedProfile!.homes != null) {
+                                      if (signedProfile!.homes!.length >= 2) {
+                                        if (signedProfile!.homes![1].rooms !=
+                                            null) {
+                                          if (signedProfile!
+                                                  .homes![1].rooms!.length >=
+                                              2) {
+                                            final currentRoom = signedProfile!
+                                                .homes![1].rooms![1];
+                                            RoomModel updatedRoom = RoomModel(
+                                              roomId: getCustomUniqueId(),
+                                              type: currentRoom.type,
+                                              name: currentRoom.name,
+                                              picture:
+                                                  'https://google.com/${dateformatter.format(DateTime.now())}',
+                                              powerUsage:
+                                                  currentRoom.powerUsage,
+                                              devices: currentRoom.devices,
+                                            );
+                                            try {
+                                              await _roomsRepository!
+                                                  .updateRoom(
+                                                updatedRoom,
+                                                signedProfile!.homes![1].homeId,
+                                              );
+
+                                              if (_roomsRepository!.status) {
+                                                signedProfile!.homes![1]
+                                                    .rooms![1] = updatedRoom;
+                                                print(
+                                                    "Room updated picture changed, last image: ${currentRoom.picture}, new image: ${updatedRoom.picture}");
+                                              } else {
+                                                print(_homesRepository!
+                                                    .errorMessage);
+                                              }
+                                            } on Exception catch (e) {
+                                              print(e.toString());
+                                            }
+                                          } else {
+                                            print(
+                                                "Too few ROOMS, at least 2 needed to perform update on ROOM n.2");
+                                          }
+                                        } else {
+                                          print(
+                                              "No ROOMS found on 2nd HOME, Add at least 2 to perform update on ROOM n.2");
+                                        }
+                                      } else {
+                                        print(
+                                            "Too few homes, at least 2 needed to perform update on home n.2");
+                                      }
+                                    } else {
+                                      print(
+                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
+                                    }
+                                  } else {
+                                    print("Logged user not found");
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          //END BUTTON COMPONENT
+                          //BUTTON COMPONENT
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade600)),
+                                child: const Text("Delete last room"),
+                                onPressed: () async {
+                                  if (signedProfile != null) {
+                                    if (signedProfile!.homes != null) {
+                                      if (signedProfile!.homes!.isNotEmpty) {
+                                        HomeModel home2Delete = signedProfile!
+                                                .homes![
+                                            (signedProfile!.homes!.length - 1)];
+                                        try {
+                                          await _homesRepository!
+                                              .deleteHome(home2Delete.homeId);
+
+                                          if (_homesRepository!.status) {
+                                            signedProfile!.homes!
+                                                .remove(home2Delete);
+                                            print(
+                                                "Home deleted, current homes:${signedProfile!.homes!.length}");
+                                          } else {
+                                            print(
+                                                _homesRepository!.errorMessage);
+                                          }
+                                        } on Exception catch (e) {
+                                          print(e.toString());
+                                        }
+                                      } else {
+                                        print(
+                                            "No homes found, Add at least 1 to perform delete");
+                                      }
+                                    } else {
+                                      print(
+                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
+                                    }
+                                  } else {
+                                    print("Logged user not found");
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          //END BUTTON COMPONENT
+                          /********** ROOMS OPERATIONS **********/
                         ],
                       ),
                     ),

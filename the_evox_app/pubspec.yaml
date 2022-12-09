@@ -40,6 +40,7 @@ dependencies:
   flutter_riverpod: ^2.1.1
 
   carousel_slider: ^4.1.1
+  intl:
 
 
   # The following adds the Cupertino Icons font to your application.
