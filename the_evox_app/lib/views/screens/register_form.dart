@@ -1,7 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:the_evox_app/models/authorization_model.dart';
+import 'package:the_evox_app/models/device_model.dart';
+import 'package:the_evox_app/models/home_model.dart';
+import 'package:the_evox_app/models/room_model.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
+import 'package:the_evox_app/providers/auth_provider.dart';
 import 'package:the_evox_app/providers/user_provider.dart';
 import 'package:the_evox_app/repositories/user_home_repository.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
@@ -24,10 +30,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseAuth = ref.watch(FirebaseAuthProvider);
-    final profileRepository = ref.watch(UserProfileRepositoryProvider);
-    var homeRepository = ref.watch(UserHomeRepositoryProvider);
-    UserProfile? signedProfile = null;
+    final firebaseAuth = ref.watch(firebaseAuthProvider);
+    final profileRepository = ref.watch(userProfileRepositoryProvider);
+    var signedProfile = ref.watch(userStateProvider);
+    var homeRepository = ref.watch(homeRepositoryProvider);
 
     return GestureDetector(
       onTap: () {
@@ -89,7 +95,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               filled: true,
                               fillColor: Colors.grey.shade200,
                               hintText: 'Full name',
-                              //suffixIcon: const Icon(Icons.email_outlined),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(color: Colors.black),
@@ -112,7 +117,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               filled: true,
                               fillColor: Colors.grey.shade200,
                               hintText: 'Email',
-                              //suffixIcon: const Icon(Icons.email_outlined),
                               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(color: Colors.black),
@@ -145,7 +149,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                   borderSide: const BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(25.7),
                                 ),
-                                //suffixIcon: const Icon(Icons.lock_open),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     // Based on passwordVisible state choose the icon
@@ -205,6 +208,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                       onPressed: () async {
+                        ref.read(userNameProvider.notifier).state = _userName.text;
+                        ref.read(userEmailProvider.notifier).state = _userEmail.text;
+
                         if (signedProfile == null) {
                           /** If THERE ISNT a user profile object created
                                * then proceed to signin intend */
@@ -212,23 +218,35 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                             /** Make sign up intend with email and password */
                             UserCredential userSigned =
                                 await firebaseAuth.createUserWithEmailAndPassword(
-                                    email: 'jorgegarcia@gmail.com', password: "12345678");
+                                    email: ref.read(userEmailProvider),
+                                    password: _userPassword.text);
+                            print(ref.read(userNameProvider));
+                            print(ref.read(userEmailProvider));
 
                             /** If no error throwned
                                  * get user info from credential */
                             User? newUserInfo = userSigned.user;
-                            print(newUserInfo);
+
+                            /** Create a test filled up object user profile
+                                 * binded to user authenticated */
+                            UserProfile newUserProfile = _createTestFilledProfile(
+                                testName: newUserInfo!.displayName.toString(),
+                                testAuthId: newUserInfo.uid);
+
+                            newUserProfile.email = _userEmail.text;
+                            newUserProfile.name = _userName.text;
 
                             /** Create a user profile in DB from previous filledup
                                  * object and stores the ID of created db doc */
-                            signedProfile!.profileDocId =
-                                await profileRepository.createUserProfile(signedProfile!);
+                            newUserProfile.profileDocId =
+                                await profileRepository.createUserProfile(newUserProfile);
                             if (profileRepository.status) {
                               /** If Status indicator is true means that profile
                                      * was successfully created and stores
                                      * the locally created profile in global var */
-                              homeRepository =
-                                  UserHomeRepository(userProfileDocId: signedProfile.profileDocId!);
+                              signedProfile = newUserProfile;
+                              homeRepository = UserHomeRepository(
+                                  userProfileDocId: signedProfile!.profileDocId!);
                             } else {
                               print(profileRepository.errorMessage);
                             }
@@ -239,6 +257,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           /** If THERE IS a user profile object then means that user was logged in */
                           print("User is already logged!!");
                         }
+                        setState(() {
+                          Navigator.pushReplacement(
+                              context, MaterialPageRoute(builder: (context) => const MyHome()));
+                        });
                       },
                       child: const Text('Register'),
                     ),
@@ -254,7 +276,42 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 70,
                         child: ElevatedButton(
                             onPressed: () async {
-                              //FireBaseAuthAPI().signIn();
+                              try {
+                                // Trigger the authentication flow
+                                GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+                                // Obtain the auth details from the request
+                                GoogleSignInAuthentication? googleAuth =
+                                    await googleUser?.authentication;
+
+                                // Create a new credential
+                                var credential = GoogleAuthProvider.credential(
+                                  accessToken: googleAuth?.accessToken,
+                                  idToken: googleAuth?.idToken,
+                                );
+
+                                UserCredential newGoogleUser =
+                                    await firebaseAuth.signInWithCredential(credential);
+                                print('UserCrendetial: $credential');
+
+                                /** Create a user profile in DB from previous filledup
+                                 * object and stores the ID of created db doc */
+                                signedProfile?.profileDocId =
+                                    await profileRepository.createUserProfile(signedProfile!);
+                                if (profileRepository.status) {
+                                  /** If Status indicator is true means that profile
+                               * was successfully created and stores
+                               * the locally created profile in global var */
+                                  signedProfile = signedProfile;
+                                  homeRepository = UserHomeRepository(
+                                      userProfileDocId: signedProfile!.profileDocId!);
+                                } else {
+                                  print(profileRepository.errorMessage);
+                                }
+                              } on FirebaseAuthException catch (e) {
+                                print("error: ${e.message}");
+                              }
+
                               Navigator.pushReplacement(
                                   context, MaterialPageRoute(builder: (context) => const MyHome()));
                             },
@@ -359,4 +416,55 @@ String? _validatePassword(String? formPassword) {
   }
 
   return null;
+}
+
+UserProfile _createTestFilledProfile({
+  String testName = "User Test",
+  String testEmail = "user@test.com",
+  String testAuthId = "0101010101",
+}) {
+  var creationDt = DateTime.now();
+  var userHomeRoomDevices = [
+    DeviceModel(
+        deviceId: "aa11aa11",
+        name: "Main light",
+        type: "Rgb Lamp",
+        controller: {"parametro1": "valor1", "parametro2": "valor2"},
+        powerMeasure: 100.0),
+  ];
+  var userHomeRooms = [
+    RoomModel(
+        roomId: "a1a1a1a1",
+        name: "Living room",
+        picture: "http://google.com/home1room1.jpg",
+        powerUsage: 2535.0,
+        devices: userHomeRoomDevices),
+  ];
+  var userHomes = [
+    HomeModel(
+        homeId: "AAAAAAAA",
+        name: "Forest House",
+        location: {
+          "address": "555 Oakroad, Winterforest",
+          "coords": "19N 19W 19.19",
+          "countryCode": "MX"
+        },
+        images: ["http://google.com/home1.jpg", "http://google.com/home2.jpg"],
+        rooms: userHomeRooms),
+  ];
+  var userAuthorizations = [
+    (AuthorizationModel(guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
+  ];
+  return UserProfile(
+      userId: testAuthId,
+      name: testName,
+      email: testEmail,
+      photo: "http://google.com",
+      countryCode: "MX",
+      authorizations: userAuthorizations,
+      homes: userHomes,
+      invites: ["03030303", "04040404"],
+      created: creationDt,
+      modified: creationDt,
+      verified: false);
 }

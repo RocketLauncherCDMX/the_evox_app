@@ -126,7 +126,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                       /** Make sign up intend with email and password */
                                       UserCredential userSigned =
                                           await _firebaseAuth.createUserWithEmailAndPassword(
-                                              email: 'jorgegarcia@gmail.com', password: "12345678");
+                                              email: 'the_evox@gmail.com', password: "12345678");
 
                                       /** If no error throwned
                                  * get user info from credential */
@@ -189,7 +189,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                  */
                                       UserCredential userSigned =
                                           await _firebaseAuth.signInWithEmailAndPassword(
-                                              email: 'jorgegarcia@gmail.com', password: "12345678");
+                                              email: 'the_evox@gmail.com', password: "12345678");
 
                                       /** Trying to retrive the profile from DB using
                                  * user authenticated ID */
@@ -392,7 +392,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                   try {
                                     UserCredential userGoogleSigned =
                                         await _firebaseAuth.signInWithEmailAndPassword(
-                                            email: 'jorgegarcia@gmail.com', password: "12345678");
+                                            email: 'the_evox@gmail.com', password: "12345678");
                                   } on FirebaseAuthException catch (e) {
                                     print("error: ${e.message}");
                                   }
@@ -609,6 +609,13 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                   ),
                 ],
               ),
+              Column(
+                children: const <Widget>[
+                  Text('Test name: Abhay'),
+                  Text('Test Email: the_evox@gmail.com'),
+                  Text('Test Password: 12345678'),
+                ],
+              )
             ],
           ),
         ),
@@ -617,8 +624,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
   }
 
   UserProfile _createTestFilledProfile({
-    String testName = "User Test",
-    String testEmail = "user@test.com",
+    String testName = "Abhay",
+    String testEmail = "the_evox@test.com",
     String testAuthId = "0101010101",
   }) {
     var creationDt = DateTime.now();

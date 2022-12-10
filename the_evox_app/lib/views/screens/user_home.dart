@@ -1,10 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:the_evox_app/models/home_model.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
+import 'package:the_evox_app/providers/auth_provider.dart';
+import 'package:the_evox_app/providers/home_provider.dart';
 import 'package:the_evox_app/providers/user_provider.dart';
-import 'package:the_evox_app/views/screens/add_room.dart';
+import 'package:the_evox_app/providers/wigdet_properties_provider.dart';
+import 'package:the_evox_app/views/screens/user_add_room.dart';
+import 'package:the_evox_app/views/screens/user_automations.dart';
+import 'package:the_evox_app/views/widgets/custom_dropdown.dart';
+import 'package:the_evox_app/views/screens/screens.dart';
 import 'package:the_evox_app/views/widgets/room_card.dart';
+
+class Users {
+  final int id;
+  final String username;
+  final String fullName;
+
+  Users({
+    required this.id,
+    required this.username,
+    required this.fullName,
+  });
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return this.fullName;
+  }
+}
 
 // ignore: must_be_immutable
 class MyHome extends ConsumerStatefulWidget {
@@ -15,7 +41,6 @@ class MyHome extends ConsumerStatefulWidget {
 }
 
 class _MyHomeState extends ConsumerState<MyHome> {
-  final List<String> homeNames = <String>['One', 'Two', 'Three', 'Four'];
   //final _actualVal = 'Add Home';
   // ignore: prefer_final_fields
   int _rooms = 1;
@@ -24,88 +49,90 @@ class _MyHomeState extends ConsumerState<MyHome> {
   //var _temperature = 187;
   final _tempDouble = 22.3;
   final _activeDevices = 4;
-  final _powerUsage = 21.4;
+  final _powerUsage = 0.0;
   // ignore: unused_field
   final _bottomNavIcon = 1;
 
+  List<Users?> usersArr = [
+    Users(id: 1, username: "abc", fullName: "Add new home"),
+    Users(id: 2, username: "xyz", fullName: "myHome"),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    UserProfile newUser = ref.watch(userProvider);
-    String dropdownValue = homeNames.first;
+    var myHomes = ref.watch(HomeProvider);
+    var signedUser = ref.watch(userStateProvider);
+
+    double roundness = ref.watch(roundnessProvider);
+
     return Scaffold(
       body: SafeArea(
         child: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(newUser.photo),
-                    backgroundColor: Colors.transparent,
-                    radius: 42,
+                  Expanded(
+                    flex: 1,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const UserSettings()),
+                        );
+                      },
+                      child: const CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/user_image.png'),
+                        backgroundColor: Colors.transparent,
+                        radius: 30,
+                      ),
+                    ),
                   ),
-                  Container(
-                    height: 60,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.pink.shade200,
-                        border: Border.all(
-                          color: Colors.pink.shade200,
-                        ),
-                        borderRadius: const BorderRadius.all(Radius.circular(15))),
-                    margin: const EdgeInsets.all(10),
-                    child: Center(
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: dropdownValue,
-                          hint: const Text('My homes', style: TextStyle(fontSize: 18)),
-                          icon: const Icon(
-                            Icons.arrow_drop_down,
-                            color: Colors.black,
-                          ),
-                          style: const TextStyle(
-                              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
-                          onChanged: (String? value) {
-                            // This is called when the user selects an item.
-                            setState(() {
-                              dropdownValue = value!;
-                              print(value);
-                            });
-                          },
-                          items: homeNames.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                  Expanded(
+                    flex: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black26,
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(15))),
+                        child: Center(
+                          child: CustomDropdown<Users>(
+                              modelList: usersArr, model: usersArr[1], callback: (user) {}),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 50,
-                    height: 50,
+                  Expanded(
+                    flex: 1,
                     child: SizedBox(
-                      child: OutlinedButton(
-                          style: ButtonStyle(
-                              alignment: AlignmentDirectional.center,
-                              backgroundColor: MaterialStateProperty.all(Colors.grey.shade700),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      side: const BorderSide(color: Colors.grey)))),
-                          onPressed: () => {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const AddRoom()),
-                                ),
-                              },
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          )),
+                      width: 50,
+                      height: 55,
+                      child: SizedBox(
+                        child: OutlinedButton(
+                            style: ButtonStyle(
+                                alignment: AlignmentDirectional.center,
+                                backgroundColor: MaterialStateProperty.all(Colors.grey.shade700),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15.0),
+                                        side: const BorderSide(color: Colors.grey)))),
+                            onPressed: () => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const SetupHome()),
+                                  ),
+                                },
+                            child: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                            )),
+                      ),
                     ),
                   ),
                 ],
@@ -116,7 +143,7 @@ class _MyHomeState extends ConsumerState<MyHome> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Hello ${newUser.name}',
+                  'Hello ${ref.watch(userNameProvider)}',
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
                 ),
                 const SizedBox(width: 10.0),
@@ -146,14 +173,15 @@ class _MyHomeState extends ConsumerState<MyHome> {
                       margin: EdgeInsets.zero,
                       elevation: 0.0,
                       color: Colors.grey.shade700,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(roundness)),
                       ),
                       child: SizedBox(
                         height: 150.0,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            const SizedBox(height: 10),
                             const Icon(
                               Icons.cloud,
                               color: Colors.white,
@@ -173,6 +201,7 @@ class _MyHomeState extends ConsumerState<MyHome> {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 16,
                                     color: Colors.white)),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
@@ -187,19 +216,20 @@ class _MyHomeState extends ConsumerState<MyHome> {
                       margin: EdgeInsets.zero,
                       elevation: 0.0,
                       color: Colors.grey.shade700,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(roundness)),
                       ),
                       child: SizedBox(
                         height: 150.0,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            const SizedBox(height: 5),
                             const Icon(
                               Icons.settings_rounded,
                               color: Colors.white,
                             ),
-                            const Text('Hello',
+                            const Text('0',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 32,
@@ -216,6 +246,7 @@ class _MyHomeState extends ConsumerState<MyHome> {
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
                                         color: Colors.white)),
+                                SizedBox(height: 10),
                               ],
                             )
                           ],
@@ -232,14 +263,15 @@ class _MyHomeState extends ConsumerState<MyHome> {
                       margin: EdgeInsets.zero,
                       elevation: 0.0,
                       color: Colors.grey.shade700,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(roundness)),
                       ),
                       child: SizedBox(
                         height: 150.0,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            const SizedBox(height: 10),
                             const Icon(
                               Icons.electric_bolt,
                               color: Colors.white,
@@ -259,6 +291,7 @@ class _MyHomeState extends ConsumerState<MyHome> {
                                     fontWeight: FontWeight.normal,
                                     fontSize: 16,
                                     color: Colors.white)),
+                            const SizedBox(height: 10),
                           ],
                         ),
                       ),
@@ -268,7 +301,7 @@ class _MyHomeState extends ConsumerState<MyHome> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 5, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -277,26 +310,29 @@ class _MyHomeState extends ConsumerState<MyHome> {
                       CircleAvatar(
                           backgroundColor: Colors.grey.shade700,
                           radius: 16,
-                          child: const Text('1', style: const TextStyle(color: Colors.white))),
+                          child:
+                              Text(_rooms.toString(), style: const TextStyle(color: Colors.white))),
                       const SizedBox(width: 15),
                       const Text('Rooms',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black)),
                     ],
                   ),
-                  Row(children: <Widget>[
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
                     TextButton(
-                      onPressed: () => {
-                        //myRooms.add("string-${myRooms.length + 1}");
-                        //print(ref.read(lengthProvider.notifier).state = myRooms.length + 1),
-                      },
+                      onPressed: () => {},
                       child: Text(
                         _rooms == 0 ? 'Add room' : 'See all',
                         style: const TextStyle(fontSize: 22),
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AddRoom()),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         fixedSize: const Size(20, 20),
                         shape: const CircleBorder(),
@@ -313,8 +349,8 @@ class _MyHomeState extends ConsumerState<MyHome> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 30),
-              //child: _rooms == 0 ? noRoomsWidget() : createRoomCard(ref.read(userHomeRooms)),
-              child: noRoomsWidget(),
+              child: _rooms == 0 ? noRoomsWidget() : createRoomCard(),
+              //child: noRoomsWidget(),
             ),
           ],
         ),
@@ -342,7 +378,14 @@ class _MyHomeState extends ConsumerState<MyHome> {
             ),
             IconButton(
               enableFeedback: false,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const Automations(),
+                  ),
+                );
+              },
               icon: const Icon(
                 Icons.device_hub_rounded,
                 color: Colors.black,
@@ -351,7 +394,14 @@ class _MyHomeState extends ConsumerState<MyHome> {
             ),
             IconButton(
               enableFeedback: false,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const Report(),
+                  ),
+                );
+              },
               icon: Transform.scale(
                 scaleX: -1,
                 child: const Icon(
@@ -363,25 +413,21 @@ class _MyHomeState extends ConsumerState<MyHome> {
             ),
             IconButton(
               enableFeedback: false,
-              onPressed: () {},
-              icon: Stack(
-                children: <Widget>[
-                  Transform.rotate(
-                    angle: 11,
-                    child: const Icon(
-                      //Icons.hexagon_rounded,
-                      CupertinoIcons.add,
-                      color: Colors.black,
-                      size: 35,
-                    ),
+              onPressed: () {
+                Navigator.pushReplacement<void, void>(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) => const UserSettings(),
                   ),
-                  Transform.scale(
-                    scale: 0.4,
-                    child: Transform.translate(
-                        offset: const Offset(14, 6),
-                        child: const Icon(Icons.circle, color: Colors.white)),
-                  ),
-                ],
+                );
+              },
+              icon: Transform.scale(
+                scaleX: -1,
+                child: const Icon(
+                  Icons.settings,
+                  color: Colors.black,
+                  size: 35,
+                ),
               ),
             ),
           ],
@@ -395,13 +441,14 @@ noRoomsWidget() {
   return SizedBox(
     child: Column(
       children: <Widget>[
+        const SizedBox(height: 15),
         Container(
           decoration: const BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                  offset: Offset(0, 8), blurRadius: 10, color: Colors.black26, spreadRadius: 5)
+                  offset: Offset(0, 8), blurRadius: 10, color: Colors.black12, spreadRadius: 5)
             ],
           ),
           child: CircleAvatar(
@@ -411,6 +458,7 @@ noRoomsWidget() {
                   style:
                       TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold))),
         ),
+        const SizedBox(height: 15),
         const Text('No rooms',
             style: TextStyle(color: Colors.black, fontSize: 36, fontWeight: FontWeight.bold)),
         const SizedBox(height: 15),
@@ -423,38 +471,3 @@ noRoomsWidget() {
     ),
   );
 }
-
-
-    /*
-    child: Column(
-      children: <Widget>[
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 8), blurRadius: 10, color: Colors.black26, spreadRadius: 5)
-            ],
-          ),
-          child: CircleAvatar(
-              backgroundColor: Colors.pink.shade200,
-              radius: 42,
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 60,
-              )),
-        ),
-        const Text('Rooms',
-            style: TextStyle(color: Colors.black, fontSize: 36, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 15),
-        const Text('You have rooms.',
-            style: TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.normal)),
-        const Text('click "Add room" for another room.',
-            style: TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.normal)),
-        const SizedBox(height: 100)
-      ],
-    ),
-  );
-}*/

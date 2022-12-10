@@ -9,8 +9,8 @@ import 'home_model.dart';
 
 class UserProfile {
   final String userId;
-  final String name;
-  final String email;
+  String name;
+  String email;
   final String photo;
   final String? countryCode;
   late List<HomeModel>? homes;

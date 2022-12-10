@@ -33,12 +33,10 @@ class _MyWidgetState extends State<SelectCountry> {
                       height: 50,
                       child: OutlinedButton(
                           style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
-                                      side: const BorderSide(
-                                          color: Colors.grey)))),
+                                      side: const BorderSide(color: Colors.grey)))),
                           onPressed: () => {Navigator.pop(context)},
                           child: const Icon(
                             Icons.arrow_back_ios_new,
@@ -82,15 +80,10 @@ class _MyWidgetState extends State<SelectCountry> {
                 height: 60.0,
                 child: TextButton(
                     style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                            Colors.grey.shade600),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.grey.shade200),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(25.0)))),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade600),
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                     onPressed: () {},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,11 +108,9 @@ class _MyWidgetState extends State<SelectCountry> {
               height: 60,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0)))),
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                 onPressed: () => {},
                 child: const Text('Next'),
               ),

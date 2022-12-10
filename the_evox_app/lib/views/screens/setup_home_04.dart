@@ -1,14 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:the_evox_app/views/screens/setup_home_04.dart';
+import 'package:the_evox_app/views/screens/screens.dart';
 
-class HomeAdress extends StatefulWidget {
-  const HomeAdress({Key? key}) : super(key: key);
+class AddRooms extends StatefulWidget {
+  const AddRooms({Key? key}) : super(key: key);
 
   @override
-  State<HomeAdress> createState() => _MyWidgetState();
+  State<AddRooms> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<HomeAdress> {
+class _MyWidgetState extends State<AddRooms> {
   final _textController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class _MyWidgetState extends State<HomeAdress> {
                 const Expanded(
                   flex: 1,
                   child: Text(
-                    '3/4',
+                    '4/4',
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ),
@@ -69,13 +70,13 @@ class _MyWidgetState extends State<HomeAdress> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               const Text(
-                'Home address',
+                'Add rooms',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32.0),
               ),
               const SizedBox(width: 10.0),
               SizedBox(
                 child: Image.asset(
-                  'assets/icons/pin.png',
+                  'assets/icons/couch.png',
                   width: 30,
                   height: 30,
                   fit: BoxFit.scaleDown,
@@ -99,7 +100,7 @@ class _MyWidgetState extends State<HomeAdress> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.grey.shade200,
-                        hintText: 'Saint claire Street #26',
+                        hintText: 'Room name',
                         suffixIcon: IconButton(
                             onPressed: () {
                               _textController.clear();
@@ -133,7 +134,7 @@ class _MyWidgetState extends State<HomeAdress> {
                         ),
                         child: const Center(
                           child: Icon(
-                            Icons.my_location,
+                            Icons.add,
                             color: Colors.white,
                           ),
                         ),
@@ -155,12 +156,14 @@ class _MyWidgetState extends State<HomeAdress> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                 onPressed: () => {
-                  Navigator.push(
+                  Navigator.pushReplacement<void, void>(
                     context,
-                    MaterialPageRoute(builder: (context) => const AddRooms()),
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const MyHome(),
+                    ),
                   ),
                 },
-                child: const Text('Next'),
+                child: const Text('Save'),
               ),
             ),
             const SizedBox(height: 30.0),

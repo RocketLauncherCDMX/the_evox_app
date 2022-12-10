@@ -11,6 +11,7 @@ class AddRoom extends StatefulWidget {
 }
 
 class _AddRoomState extends State<AddRoom> {
+  final _roomName = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +28,7 @@ class _AddRoomState extends State<AddRoom> {
                         image: DecorationImage(
                       fit: BoxFit.cover,
                       alignment: FractionalOffset.topCenter,
-                      image: NetworkImage(
-                          'https://www.decorilla.com/online-decorating/wp-content/uploads/2022/03/black-and-white-luxury-kitchen-design.jpg'),
+                      image: AssetImage('assets/images/room_example.jpg'),
                     )),
                   ),
                   Transform.translate(
@@ -41,18 +41,33 @@ class _AddRoomState extends State<AddRoom> {
               flex: 1,
               child: Column(
                 children: <Widget>[
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 15, 0, 30),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 15, 20, 30),
                     child: SizedBox(
-                      width: 200,
-                      child: TextField(
+                        width: double.infinity,
+                        child: TextFormField(
+                          controller: _roomName,
+                          //validator: validateEmail,
+                          enableInteractiveSelection: false,
+                          autofocus: false,
                           textAlign: TextAlign.center,
-                          keyboardType: TextInputType.name,
+                          textCapitalization: TextCapitalization.none,
                           decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
                             hintText: 'Room name',
+                            //suffixIcon: const Icon(Icons.email_outlined),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(25.7),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(25.7),
+                            ),
                           ),
-                          style: TextStyle(fontSize: 22.0, height: 2.0, color: Colors.black)),
-                    ),
+                        )),
                   ),
                   BlackButton(
                     onPressed: () => {},

@@ -13,7 +13,7 @@ class _MyWidgetState extends State<SetupHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
           child: Container(
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
@@ -35,12 +35,10 @@ class _MyWidgetState extends State<SetupHome> {
                       height: 50,
                       child: OutlinedButton(
                           style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
-                                      side: const BorderSide(
-                                          color: Colors.grey)))),
+                                      side: const BorderSide(color: Colors.grey)))),
                           onPressed: () => {Navigator.pop(context)},
                           child: const Icon(
                             Icons.arrow_back_ios_new,
@@ -89,8 +87,7 @@ class _MyWidgetState extends State<SetupHome> {
               height: 30.0,
             ),
             const Center(
-              child: Text(
-                  'Choose a nickname for this home to help identify it later.',
+              child: Text('Choose a nickname for this home to help identify it later.',
                   style: TextStyle(
                     fontSize: 16.0,
                   )),
@@ -117,8 +114,7 @@ class _MyWidgetState extends State<SetupHome> {
                         },
                         icon: const Icon(Icons.clear),
                         color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                     focusedBorder: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.grey),
                       borderRadius: BorderRadius.circular(25.7),
@@ -139,11 +135,9 @@ class _MyWidgetState extends State<SetupHome> {
               height: 60,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0)))),
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
                 onPressed: () => {
                   Navigator.push(
                     context,

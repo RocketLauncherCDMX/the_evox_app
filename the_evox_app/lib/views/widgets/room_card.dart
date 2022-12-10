@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:the_evox_app/models/room_model.dart';
 
-createRoomCard(RoomModel room) {
+createRoomCard() {
   return Row(
     children: <Widget>[
       SizedBox(
@@ -13,8 +12,8 @@ createRoomCard(RoomModel room) {
             child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
                 child: SizedBox(
-                    child: Image.network(
-                  room.picture,
+                    child: Image.asset(
+                  'assets/images/room_example.jpg',
                   fit: BoxFit.cover,
                 ))),
           ),
@@ -30,7 +29,7 @@ createRoomCard(RoomModel room) {
                       const SizedBox(height: 5),
                       const Icon(Icons.chair),
                       const SizedBox(height: 5),
-                      Text(room.name),
+                      const Text('Living room'),
                       const SizedBox(height: 5),
                       Row(
                         children: const <Widget>[
@@ -40,11 +39,11 @@ createRoomCard(RoomModel room) {
                           ),
                           Expanded(
                             flex: 10,
-                            child: Text('Devices'),
+                            child: Text('0 Devices'),
                           ),
                           Expanded(
                             flex: 5,
-                            child: Text('On'),
+                            child: Text('0 On'),
                           ),
                           Expanded(
                             flex: 1,

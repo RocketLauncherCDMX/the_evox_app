@@ -15,20 +15,10 @@ final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   UserProfile? signedProfile;
 */
 
-final FirebaseAuthProvider = Provider<FirebaseAuth>((ref) {
-  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  return firebaseAuth;
-});
-
-final UserProfileRepositoryProvider = Provider<UserProfileRepository>((ref) {
-  UserProfileRepository profileRepository = UserProfileRepository();
-  return profileRepository;
-});
-
-var UserHomeRepositoryProvider = Provider<UserHomeRepository>((ref) {
+/*var UserHomeRepositoryProvider = Provider<UserHomeRepository>((ref) {
   UserHomeRepository homeRepository;
   return homeRepository;
-});
+});*/
 
 var creationDt = DateTime.now();
 var userHomeRoomDevices = [
@@ -40,7 +30,7 @@ var userHomeRoomDevices = [
       powerMeasure: 100.0),
 ];
 
-var userHomeRooms = [
+var userHomeRooms = <RoomModel>[
   RoomModel(
       roomId: "a1a1a1a1",
       name: "Living room",
@@ -49,91 +39,42 @@ var userHomeRooms = [
       devices: userHomeRoomDevices),
 ];
 
-var userHomes = [
-  HomeModel(
-      homeId: "AAAAAAAA",
-      name: "Forest House",
-      location: {
-        "address": "555 Oakroad, Winterforest",
-        "coords": "19N 19W 19.19",
-        "countryCode": "MX"
-      },
-      images: ["http://google.com/home1.jpg", "http://google.com/home2.jpg"],
-      rooms: userHomeRooms),
-];
+final homeRepositoryProvider = StateProvider<UserHomeRepository?>((ref) {
+  UserHomeRepository? userHomes;
+  return userHomes;
+});
+
+/*final userHomesProvider = Provider<List<HomeModel>>((ref) {
+  var userHomes = <HomeModel>[
+    HomeModel(
+        homeId: "AAAAAAAA",
+        name: "my house",
+        location: {
+          "address": "555 Oakroad, Winterforest",
+          "coords": "19N 19W 19.19",
+          "countryCode": "MX"
+        },
+        images: ["http://google.com/home1.jpg", "http://google.com/home2.jpg"],
+        rooms: userHomeRooms),
+    HomeModel(
+        homeId: "BBBBBBBB",
+        name: "my house",
+        location: {
+          "address": "324 Snatoro, Wouldbingorf",
+          "coords": "76N 37W 34.13",
+          "countryCode": "MX"
+        },
+        images: ["http://google.com/home1.jpg", "http://google.com/home2.jpg"],
+        rooms: userHomeRooms),
+  ];
+  return userHomes;
+});*/
 
 var userAuthorizations = [
   (AuthorizationModel(guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
 ];
 
-var userProvider = Provider<UserProfile>((ref) {
-  UserProfile signedUser = UserProfile(
-      userId: 'R5KGw7KLu35LGKGu765',
-      name: 'Fabian Alfonso',
-      email: 'juanHdz@gmail.com',
-      photo:
-          'https://lh3.googleusercontent.com/a/ALm5wu2ko5wjQrKV20cc4TTZZTD8kwCN7JvOswVhgg61Tw=s288-p-rw-no',
-      countryCode: 'MX',
-      authorizations: userAuthorizations,
-      homes: userHomes,
-      invites: ["03030303", "04040404"],
-      created: creationDt,
-      modified: creationDt,
-      verified: true,
-      profileDocId: '');
+var userStateProvider = StateProvider<UserProfile?>((ref) {
+  UserProfile? signedUser;
   return signedUser;
 });
-
-/*
-UserProfile _createTestFilledProfile(
-      {String testName = "Juan Hernandez", String testAuthId = "0101010101"}) {
-    var creationDt = DateTime.now();
-    var userHomeRoomDevices = [
-      DeviceModel(
-          deviceId: "aa11aa11",
-          name: "Main light",
-          type: "Rgb Lamp",
-          controller: {"parametro1": "valor1", "parametro2": "valor2"},
-          powerMeasure: 100.0),
-    ];
-    var userHomeRooms = [
-      RoomModel(
-          roomId: "a1a1a1a1",
-          name: "Living room",
-          picture: "http://google.com/home1room1.jpg",
-          powerUsage: 2535.0,
-          devices: userHomeRoomDevices),
-    ];
-    var userHomes = [
-      HomeModel(
-          homeId: "AAAAAAAA",
-          name: "Forest House",
-          location: {
-            "address": "555 Oakroad, Winterforest",
-            "coords": "19N 19W 19.19",
-            "countryCode": "MX"
-          },
-          images: [
-            "http://google.com/home1.jpg",
-            "http://google.com/home2.jpg"
-          ],
-          rooms: userHomeRooms),
-    ];
-    var userAuthorizations = [
-      (AuthorizationModel(
-          guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
-    ];
-    return UserProfile(
-        userId: testAuthId,
-        name: testName,
-        email: "juan.hernandez@gmail.com",
-        photo: "http://google.com",
-        countryCode: "MX",
-        authorizations: userAuthorizations,
-        homes: userHomes,
-        invites: ["03030303", "04040404"],
-        created: creationDt,
-        modified: creationDt,
-        verified: false);
-  }
-  */
