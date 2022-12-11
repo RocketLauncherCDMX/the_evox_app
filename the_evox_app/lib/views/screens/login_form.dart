@@ -219,7 +219,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 }
                 setState(() {
                   Navigator.pushReplacement(
-                      context, MaterialPageRoute(builder: (context) => const MyHome()));
+                      context, MaterialPageRoute(builder: (context) => const MainScreen()));
                 });
               },
               text: 'Login',
@@ -256,7 +256,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         }
 
                         Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => const MyHome()));
+                            context, MaterialPageRoute(builder: (context) => const MainScreen()));
                       },
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade300),

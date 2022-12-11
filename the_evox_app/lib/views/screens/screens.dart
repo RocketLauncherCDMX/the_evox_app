@@ -1,7 +1,7 @@
-export 'package:the_evox_app/views/screens/user_home.dart';
+export 'package:the_evox_app/views/screens/user_main_page.dart';
 export 'package:the_evox_app/views/screens/register_form.dart';
 export 'package:the_evox_app/views/screens/login_form.dart';
-export 'package:the_evox_app/views/screens/user_home.dart';
+export 'package:the_evox_app/views/screens/user_main_page.dart';
 export 'package:the_evox_app/views/screens/account_created.dart';
 export 'package:the_evox_app/views/screens/tours_01.dart';
 export 'package:the_evox_app/views/screens/tours_02.dart';

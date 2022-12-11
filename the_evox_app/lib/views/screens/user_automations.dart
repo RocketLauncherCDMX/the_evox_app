@@ -53,7 +53,7 @@ class _AutomationsState extends State<Automations> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MyHome(),
+                    builder: (BuildContext context) => const MainScreen(),
                   ),
                 );
               },

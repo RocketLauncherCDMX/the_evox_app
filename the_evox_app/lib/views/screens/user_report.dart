@@ -67,7 +67,7 @@ class _ReportState extends State<Report> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MyHome(),
+                    builder: (BuildContext context) => const MainScreen(),
                   ),
                 );
               },

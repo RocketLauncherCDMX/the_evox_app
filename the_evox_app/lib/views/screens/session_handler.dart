@@ -13,6 +13,6 @@ class SessionHandler extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bool isUserLogged = ref.watch(sessionProvider);
-    return isUserLogged ? const MyHome() : const Tours01();
+    return isUserLogged ? const MainScreen() : const Tours01();
   }
 }

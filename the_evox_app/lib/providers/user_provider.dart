@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:the_evox_app/models/authorization_model.dart';
 import 'package:the_evox_app/models/device_model.dart';
-import 'package:the_evox_app/models/home_model.dart';
 import 'package:the_evox_app/models/room_model.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
 import 'package:the_evox_app/repositories/user_home_repository.dart';
-import 'package:the_evox_app/repositories/user_profile_repository.dart';
 
 /*  // Creation of user in repotesting
 final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;

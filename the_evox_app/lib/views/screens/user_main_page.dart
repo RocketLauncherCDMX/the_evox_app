@@ -1,46 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:the_evox_app/models/home_model.dart';
-import 'package:the_evox_app/models/user_profile_model.dart';
 import 'package:the_evox_app/providers/auth_provider.dart';
 import 'package:the_evox_app/providers/home_provider.dart';
 import 'package:the_evox_app/providers/user_provider.dart';
 import 'package:the_evox_app/providers/wigdet_properties_provider.dart';
 import 'package:the_evox_app/views/screens/user_add_room.dart';
-import 'package:the_evox_app/views/screens/user_automations.dart';
 import 'package:the_evox_app/views/widgets/custom_dropdown.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
 import 'package:the_evox_app/views/widgets/room_card.dart';
 
-class Users {
-  final int id;
-  final String username;
-  final String fullName;
-
-  Users({
-    required this.id,
-    required this.username,
-    required this.fullName,
-  });
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return this.fullName;
-  }
-}
-
 // ignore: must_be_immutable
-class MyHome extends ConsumerStatefulWidget {
-  const MyHome({Key? key}) : super(key: key);
+class MainScreen extends ConsumerStatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<MyHome> createState() => _MyHomeState();
+  ConsumerState<MainScreen> createState() => _MyHomeState();
 }
 
-class _MyHomeState extends ConsumerState<MyHome> {
+class _MyHomeState extends ConsumerState<MainScreen> {
   //final _actualVal = 'Add Home';
   // ignore: prefer_final_fields
   int _rooms = 1;
@@ -53,14 +30,9 @@ class _MyHomeState extends ConsumerState<MyHome> {
   // ignore: unused_field
   final _bottomNavIcon = 1;
 
-  List<Users?> usersArr = [
-    Users(id: 1, username: "abc", fullName: "Add new home"),
-    Users(id: 2, username: "xyz", fullName: "myHome"),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    var myHomes = ref.watch(HomeProvider);
+    var myHomes = ref.watch(homesProvider);
     var signedUser = ref.watch(userStateProvider);
 
     double roundness = ref.watch(roundnessProvider);
@@ -101,9 +73,8 @@ class _MyHomeState extends ConsumerState<MyHome> {
                               color: Colors.black26,
                             ),
                             borderRadius: const BorderRadius.all(Radius.circular(15))),
-                        child: Center(
-                          child: CustomDropdown<Users>(
-                              modelList: usersArr, model: usersArr[1], callback: (user) {}),
+                        child: const Center(
+                          child: Text('Homes DropDown'),
                         ),
                       ),
                     ),

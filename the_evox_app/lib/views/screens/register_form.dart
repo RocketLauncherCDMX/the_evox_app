@@ -259,7 +259,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         }
                         setState(() {
                           Navigator.pushReplacement(
-                              context, MaterialPageRoute(builder: (context) => const MyHome()));
+                              context, MaterialPageRoute(builder: (context) => const MainScreen()));
                         });
                       },
                       child: const Text('Register'),
@@ -312,8 +312,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 print("error: ${e.message}");
                               }
 
-                              Navigator.pushReplacement(
-                                  context, MaterialPageRoute(builder: (context) => const MyHome()));
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) => const MainScreen()));
                             },
                             style: ButtonStyle(
                                 backgroundColor:

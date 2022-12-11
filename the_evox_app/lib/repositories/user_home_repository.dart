@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:the_evox_app/models/home_model.dart';
 
 class UserHomeRepository {
@@ -16,8 +13,7 @@ class UserHomeRepository {
   UserHomeRepository({
     required this.userProfileDocId,
   }) {
-    dbUsrProfileDoc =
-        FirebaseFirestore.instance.collection('users').doc(userProfileDocId);
+    dbUsrProfileDoc = FirebaseFirestore.instance.collection('users').doc(userProfileDocId);
   }
 
   //If insert succeed returns the timestamp of insertion, otherwise returns null
@@ -30,10 +26,8 @@ class UserHomeRepository {
     homeArranged.add(newHomeData.toFirestore());
 
     try {
-      await dbUsrProfileDoc!.update({
-        "homes": FieldValue.arrayUnion(homeArranged),
-        "modified": currentDt
-      });
+      await dbUsrProfileDoc!
+          .update({"homes": FieldValue.arrayUnion(homeArranged), "modified": currentDt});
       _setRepositoryState(true, "", 0);
       return true;
     } on FirebaseException catch (e) {
@@ -85,8 +79,7 @@ class UserHomeRepository {
 //This 'repository state setter' method must be used before every
 //posible result of each method ends
 //* @param _status true for success on method, false for fail on method
-  void _setRepositoryState(
-      bool _status, String _errorMessage, int? _errorCode) {
+  void _setRepositoryState(bool _status, String _errorMessage, int? _errorCode) {
     status = _status;
     errorMessage = _errorMessage;
     errorCode = _errorCode;

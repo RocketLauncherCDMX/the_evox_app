@@ -457,7 +457,7 @@ class _UserSettingsState extends ConsumerState<UserSettings> {
                 Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const MyHome(),
+                    builder: (BuildContext context) => const MainScreen(),
                   ),
                 );
               },
