@@ -10,15 +10,15 @@ class HomeModel {
   final String homeId;
   final String name;
   final Map<String, dynamic> location;
-  final List<String>? images;
-  final List<RoomModel>? rooms;
+  late List<String>? images;
+  late List<RoomModel>? rooms;
 
   HomeModel({
     required this.homeId,
     required this.name,
     required this.location,
-    required this.images,
-    required this.rooms,
+    this.images,
+    this.rooms,
   });
 
   HomeModel copyWith({
@@ -73,12 +73,21 @@ class HomeModel {
     return 'HomeModel(homeId: $homeId, name: $name, location: $location, images: $images, rooms: $rooms)';
   }
 
+  //** **************** */
+  //** Kind of toMap and fromMap adapted to Firestore structure
+  //** **************** */
+
   factory HomeModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
-    final data = snapshot.data();
-    return HomeModel(
+    final Map<String, dynamic>? data = snapshot.data();
+
+    return data!.values.first.map<HomeModel>(
+      (x) =>
+          HomeModel.fromIndexAndMap(data.keys.first, x as Map<String, dynamic>),
+    );
+    /*return HomeModel(
       homeId: data?['homeId'],
       name: data?['name'],
       location: data?['location'],
@@ -89,20 +98,46 @@ class HomeModel {
                   .where((x) => {RoomModel.fromFirestore(x, null)}))
               : null)
           : null,
+    );*/
+  }
+
+  factory HomeModel.fromIndexAndMap(String index, Map<String, dynamic> map) {
+    List<RoomModel>? roomsList;
+
+    if (map['rooms'] != null) {
+      roomsList = [];
+      map['rooms'].forEach((key, value) {
+        roomsList!
+            .add(RoomModel.fromIndexAndMap(key, value as Map<String, dynamic>));
+      });
+    }
+
+    return HomeModel(
+      homeId: index,
+      name: map['name'] as String,
+      location: Map.from(map['location'] as Map<String, dynamic>),
+      images: List<String>.from(map['images'] as List<dynamic>),
+      rooms: roomsList,
     );
   }
 
-  //*! **************** */
-  //*! Probably not necesary because of Firestore db.add() accepts .toMap results
-  //*! **************** */
   Map<String, dynamic> toFirestore() {
+    late Map<String, dynamic>? roomsToFirestore;
+    if (rooms != null) {
+      roomsToFirestore = {};
+      for (var roomItem in rooms!) {
+        roomsToFirestore.addAll(roomItem.toFirestore());
+      }
+    } else {
+      roomsToFirestore = null;
+    }
     return <String, dynamic>{
-      'homeId': homeId,
-      'name': name,
-      'location': location,
-      'images': images,
-      'rooms':
-          (rooms != null) ? rooms!.map((x) => x.toFirestore()).toList() : null,
+      homeId: <String, dynamic>{
+        'name': name,
+        'location': location,
+        'images': images,
+        'rooms': roomsToFirestore,
+      }
     };
   }
 

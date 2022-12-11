@@ -1,7 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:the_evox_app/models/home_model.dart';
+import 'dart:convert';
 
-class UserHomeRepository {
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:the_evox_app/models/room_model.dart';
+
+class RoomsRepository {
   final String userProfileDocId;
 
   late DocumentReference? dbUsrProfileDoc;
@@ -10,21 +13,22 @@ class UserHomeRepository {
   String errorMessage = "";
   int? errorCode;
 
-  UserHomeRepository({
+  RoomsRepository({
     required this.userProfileDocId,
   }) {
-    dbUsrProfileDoc = FirebaseFirestore.instance.collection('users').doc(userProfileDocId);
+    dbUsrProfileDoc =
+        FirebaseFirestore.instance.collection('users').doc(userProfileDocId);
   }
 
   //If insert succeed returns the timestamp of insertion, otherwise returns null
-  Future<bool> createHome(HomeModel newHomeData) async {
+  Future<bool> createRoom(RoomModel newRoomData, String homeId) async {
     DateTime currentDt = DateTime.now();
 
-    final homeMapped = newHomeData.toFirestore();
+    final roomMapped = newRoomData.toFirestore();
 
     try {
       await dbUsrProfileDoc!.update({
-        "homes.${homeMapped.keys.first}": homeMapped.values.first,
+        "homes.$homeId.rooms.${roomMapped.keys.first}": roomMapped.values.first,
         "modified": currentDt
       });
       _setRepositoryState(true, "", 0);
@@ -36,16 +40,14 @@ class UserHomeRepository {
   }
 
   //If user
-  Future<bool> updateHome(
-    HomeModel updatedHome,
-  ) async {
+  Future<bool> updateRoom(RoomModel updatedRoom, String homeId) async {
     DateTime currentDt = DateTime.now();
 
-    final homeMapped = updatedHome.toFirestore();
+    final roomMapped = updatedRoom.toFirestore();
 
     try {
       await dbUsrProfileDoc!.update({
-        "homes.${homeMapped.keys.first}": homeMapped.values.first,
+        "homes.$homeId.rooms.${roomMapped.keys.first}": roomMapped.values.first,
         "modified": currentDt,
       });
       _setRepositoryState(true, "", 0);
@@ -56,12 +58,12 @@ class UserHomeRepository {
     }
   }
 
-  Future<bool> deleteHome(String homeToDeleteId) async {
+  Future<bool> deleteRoom(String roomToDeleteId, String homeId) async {
     DateTime currentDt = DateTime.now();
 
     try {
       await dbUsrProfileDoc!.update({
-        "homes.$homeToDeleteId": FieldValue.delete(),
+        "homes.$homeId.rooms.$roomToDeleteId": FieldValue.delete(),
         "modified": currentDt,
       });
       _setRepositoryState(true, "", 0);
@@ -76,7 +78,8 @@ class UserHomeRepository {
 //This 'repository state setter' method must be used before every
 //posible result of each method ends
 //* @param _status true for success on method, false for fail on method
-  void _setRepositoryState(bool _status, String _errorMessage, int? _errorCode) {
+  void _setRepositoryState(
+      bool _status, String _errorMessage, int? _errorCode) {
     status = _status;
     errorMessage = _errorMessage;
     errorCode = _errorCode;
