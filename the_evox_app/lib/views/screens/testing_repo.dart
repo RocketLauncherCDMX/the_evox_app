@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, slash_for_doc_comments
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -95,18 +95,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.grey.shade400)),
                                 child: const Text("Inserting Test"),
-                                onPressed: () async {
-                                  /** Create not user-binded filled profile in db */
-                                  var tmpProfile = _createTestFilledProfile();
-                                  if (await _profileRepository
-                                          .createUserProfile(tmpProfile) !=
-                                      null) {
-                                    print("PROFILE CREATED");
-                                  } else {
-                                    print(
-                                        "ERROR: ${_profileRepository.errorMessage}");
-                                  }
-                                },
+                                onPressed: () => insertTestProfile(),
                               ),
                             ),
                           ),
@@ -130,63 +119,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.lightGreen.shade300)),
                                 child: const Text("Email SignUp"),
-                                onPressed: () async {
-                                  if (signedProfile == null) {
-                                    /** If THERE ISNT a user profile object created
-                               * then proceed to signin intend */
-                                    try {
-                                      /** Make sign up intend with email and password */
-                                      UserCredential userSigned =
-                                          await _firebaseAuth
-                                              .createUserWithEmailAndPassword(
-                                                  email:
-                                                      'garcamcoder@gmail.com',
-                                                  password: "12345678");
-
-                                      /** If no error throwned
-                                 * get user info from credential */
-                                      User? newUserInfo = userSigned.user;
-
-                                      /** Create a test filled up object user profile
-                                 * binded to user authenticated */
-                                      UserProfile newUserProfile =
-                                          _createTestFilledProfile(
-                                              testName: "George Garcam",
-                                              testAuthId: newUserInfo!.uid,
-                                              testEmail:
-                                                  newUserInfo.email.toString());
-
-                                      /** Create a user profile in DB from previous filledup
-                                 * object and stores the ID of created db doc */
-                                      newUserProfile.profileDocId =
-                                          await _profileRepository
-                                              .createUserProfile(
-                                                  newUserProfile);
-                                      if (_profileRepository.status) {
-                                        /** If Status indicator is true means that profile
-                                     * was successfully created and stores
-                                     * the locally created profile in global var */
-                                        signedProfile = newUserProfile;
-                                        _homesRepository = UserHomeRepository(
-                                            userProfileDocId:
-                                                signedProfile!.profileDocId!);
-                                        _roomsRepository = RoomsRepository(
-                                            userProfileDocId:
-                                                signedProfile!.profileDocId!);
-                                        _devicesRepository = DevicesRepository(
-                                            userProfileDocId:
-                                                signedProfile!.profileDocId!);
-                                      } else {
-                                        print(_profileRepository.errorMessage);
-                                      }
-                                    } on FirebaseAuthException catch (e) {
-                                      print("error: ${e.message}");
-                                    }
-                                  } else {
-                                    /** If THERE IS a user profile object then means that user was logged in */
-                                    print("User is already logged!!");
-                                  }
-                                },
+                                onPressed: () => emailSignUp(),
                               ),
                             ),
                           ),
@@ -208,89 +141,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.lightGreen.shade300)),
                                 child: const Text("Email SignIn"),
-                                onPressed: () async {
-                                  if (signedProfile == null) {
-                                    /** If THERE ISNT a user profile object created
-                               * then proceed to signin intend */
-                                    try {
-                                      /** Perform login with email and password
-                                 * expecting for user credential
-                                 */
-                                      UserCredential userSigned =
-                                          await _firebaseAuth
-                                              .signInWithEmailAndPassword(
-                                                  email:
-                                                      'garcamcoder@gmail.com',
-                                                  password: "12345678");
-
-                                      /** Trying to retrive the profile from DB using
-                                 * user authenticated ID */
-                                      signedProfile = await _profileRepository
-                                          .getUserProfileByAuthId(
-                                              userSigned.user!.uid.toString());
-
-                                      if (_profileRepository.status) {
-                                        /** If retriving user profile from DB SUCCEEDS*/
-                                        print(
-                                            "User signed: ${signedProfile!.name}");
-                                        print(signedProfile);
-                                        _homesRepository = UserHomeRepository(
-                                            userProfileDocId:
-                                                signedProfile!.profileDocId!);
-                                      } else {
-                                        /** If retriving user profile from DB FAILS*/
-                                        if (_profileRepository.errorCode ==
-                                            404) {
-                                          /** If no Exception throwned (just profile not found)
-                                    * create one getting user info from credential */
-                                          print(
-                                              'USER WARNING: User profile no found in DB, starting profile creation');
-                                          User? newUserInfo = userSigned.user;
-
-                                          /** Create a test filled up object user profile
-                                     * binded to user authenticated */
-                                          UserProfile newUserProfile =
-                                              _createTestFilledProfile(
-                                                  testName: newUserInfo!
-                                                      .displayName
-                                                      .toString(),
-                                                  testAuthId: newUserInfo.uid);
-
-                                          /** Create a user profile in DB from previous filledup
-                                     * object and stores the ID of created db doc */
-                                          newUserProfile.profileDocId =
-                                              await _profileRepository
-                                                  .createUserProfile(
-                                                      newUserProfile);
-                                          if (_profileRepository.status) {
-                                            /** If Status indicator is true means that profile
-                                         * was successfully created and stores
-                                         * the locally created profile in global var */
-                                            print(
-                                                "User profile created for: ${newUserProfile.name}");
-                                            signedProfile = newUserProfile;
-                                            _homesRepository =
-                                                UserHomeRepository(
-                                                    userProfileDocId:
-                                                        signedProfile!
-                                                            .profileDocId!);
-                                          } else {
-                                            print(_profileRepository
-                                                .errorMessage);
-                                          }
-                                        } else {
-                                          print(
-                                              "ERROR USERPROFILEPROVIDER: ${_profileRepository.errorMessage}");
-                                        }
-                                      }
-                                    } on FirebaseAuthException catch (e) {
-                                      print("AUTH ERROR: ${e.message}");
-                                    }
-                                  } else {
-                                    /** If THERE IS a user profile object then means that user was logged in */
-                                    print("User is already logged!!");
-                                  }
-                                },
+                                onPressed: () => emailSignIn(),
                               ),
                             ),
                           ),
@@ -314,27 +165,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.cyan.shade800)),
                                 child: const Text("Update User"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    DateTime previousUpdate =
-                                        signedProfile!.modified!;
-                                    try {
-                                      signedProfile = await _profileRepository
-                                          .updateUserProfile(signedProfile!);
-                                      if (_profileRepository.status) {
-                                        print(
-                                            "User updated at: ${signedProfile!.modified.toString()}, previous update in: ${previousUpdate.toString()}");
-                                      } else {
-                                        print(
-                                            "ERROR USERPROFILEPROVIDER:${_profileRepository.errorMessage}");
-                                      }
-                                    } on Exception catch (e) {
-                                      print("Error: ${e.toString()}");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                onPressed: () => updateProfile(),
                               ),
                             ),
                           ),
@@ -356,29 +187,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.cyan.shade800)),
                                 child: const Text("Delete profile"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    try {
-                                      if (await _profileRepository
-                                          .deleteUserProfile(
-                                              signedProfile!.profileDocId!)) {
-                                        print(
-                                            "User profile successfully deleted.");
-                                        /**
-                                         * ! Delete account from Auth DB before trigger logout
-                                         */
-                                        _firebaseAuth.signOut();
-                                      } else {
-                                        print(
-                                            "ERROR USERPROFILEPROVIDER:${_profileRepository.errorMessage}");
-                                      }
-                                    } on Exception catch (e) {
-                                      print("Error: ${e.toString()}");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                onPressed: () => deleteProfile(),
                               ),
                             ),
                           ),
@@ -402,30 +211,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.red.shade500)),
                                 child: const Text("Google SignUp"),
-                                onPressed: () async {
-                                  try {
-                                    // Trigger the authentication flow
-                                    GoogleSignInAccount? googleUser =
-                                        await GoogleSignIn().signIn();
-
-                                    // Obtain the auth details from the request
-                                    GoogleSignInAuthentication? googleAuth =
-                                        await googleUser?.authentication;
-
-                                    // Create a new credential
-                                    var credential =
-                                        GoogleAuthProvider.credential(
-                                      accessToken: googleAuth?.accessToken,
-                                      idToken: googleAuth?.idToken,
-                                    );
-
-                                    UserCredential newGoogleUser =
-                                        await _firebaseAuth
-                                            .signInWithCredential(credential);
-                                  } on FirebaseAuthException catch (e) {
-                                    print("error: ${e.message}");
-                                  }
-                                },
+                                onPressed: () => googleSignUp(),
                               ),
                             ),
                           ),
@@ -447,17 +233,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.red.shade500)),
                                 child: const Text("Google SignIn"),
-                                onPressed: () async {
-                                  try {
-                                    UserCredential userGoogleSigned =
-                                        await _firebaseAuth
-                                            .signInWithEmailAndPassword(
-                                                email: 'jorgegarcia@gmail.com',
-                                                password: "12345678");
-                                  } on FirebaseAuthException catch (e) {
-                                    print("error: ${e.message}");
-                                  }
-                                },
+                                onPressed: () => googleSignIn(),
                               ),
                             ),
                           ),
@@ -480,11 +256,7 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.black)),
                                 child: const Text("SignOut"),
-                                onPressed: () {
-                                  signedProfile = null;
-                                  _homesRepository = null;
-                                  _firebaseAuth.signOut();
-                                },
+                                onPressed: () => signOut(),
                               ),
                             ),
                           ),
@@ -506,8 +278,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                       padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
                       child: Column(
                         children: [
-                          /********** HOMES OPERATIONS **********/
-                          //BUTTON COMPONENT
+                          /********** HOMES BUTTONS **********/
+                          //CREATE HOME BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -524,49 +296,12 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade700)),
                                 child: const Text("Add Home"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes == null) {
-                                      signedProfile!.homes = [];
-                                    }
-                                    HomeModel newHome = HomeModel(
-                                        homeId: getCustomUniqueId(),
-                                        name: 'Beach House',
-                                        location: {
-                                          "address":
-                                              "555 Oakroad, Winterforest",
-                                          "coords": "19N 19W 19.19",
-                                          "countryCode": "MX"
-                                        },
-                                        images: [
-                                          "https://google.com",
-                                          "https://google.com"
-                                        ],
-                                        rooms: null);
-
-                                    try {
-                                      await _homesRepository!
-                                          .createHome(newHome);
-
-                                      if (_homesRepository!.status) {
-                                        signedProfile!.homes!.add(newHome);
-                                        print(
-                                            "Home added, current homes:${signedProfile!.homes!.length}");
-                                      } else {
-                                        print(_homesRepository!.errorMessage);
-                                      }
-                                    } on Exception catch (e) {
-                                      print(e.toString());
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                onPressed: () => createHome(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          //BUTTON COMPONENT
+                          //END CREATE HOME BUTTON
+                          //UPDATE HOME BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -582,56 +317,13 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade700)),
-                                child: const Text("Update home n.2"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes != null) {
-                                      if (signedProfile!.homes!.length >= 2) {
-                                        HomeModel updatedHome = HomeModel(
-                                            homeId:
-                                                signedProfile!.homes![1].homeId,
-                                            name: signedProfile!.homes![1].name,
-                                            location: signedProfile!
-                                                .homes![1].location,
-                                            images: (List<String>.of(
-                                                signedProfile!
-                                                    .homes![1].images!)
-                                              ..add("https://google.com")),
-                                            rooms:
-                                                signedProfile!.homes![1].rooms);
-                                        try {
-                                          await _homesRepository!
-                                              .updateHome(updatedHome);
-
-                                          if (_homesRepository!.status) {
-                                            signedProfile!.homes![1] =
-                                                updatedHome;
-                                            print(
-                                                "Home updated added 1 image, current qty:${signedProfile!.homes![1].images!.length}");
-                                          } else {
-                                            print(
-                                                _homesRepository!.errorMessage);
-                                          }
-                                        } on Exception catch (e) {
-                                          print(e.toString());
-                                        }
-                                      } else {
-                                        print(
-                                            "Too few homes, at least 2 needed to perform update on home n.2");
-                                      }
-                                    } else {
-                                      print(
-                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                child: const Text("Update Home n.2"),
+                                onPressed: () => updateHome(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          //BUTTON COMPONENT
+                          //END UPDATE HOME BUTTON
+                          //DELETE HOME BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -647,49 +339,15 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade700)),
-                                child: const Text("Delete last home"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes != null) {
-                                      if (signedProfile!.homes!.isNotEmpty) {
-                                        HomeModel home2Delete = signedProfile!
-                                                .homes![
-                                            (signedProfile!.homes!.length - 1)];
-                                        try {
-                                          await _homesRepository!
-                                              .deleteHome(home2Delete.homeId);
-
-                                          if (_homesRepository!.status) {
-                                            signedProfile!.homes!
-                                                .remove(home2Delete);
-                                            print(
-                                                "Home deleted, current homes:${signedProfile!.homes!.length}");
-                                          } else {
-                                            print(
-                                                _homesRepository!.errorMessage);
-                                          }
-                                        } on Exception catch (e) {
-                                          print(e.toString());
-                                        }
-                                      } else {
-                                        print(
-                                            "No homes found, Add at least 1 to perform delete");
-                                      }
-                                    } else {
-                                      print(
-                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                child: const Text("Delete last Home"),
+                                onPressed: () => deleteHome(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          /********** HOMES OPERATIONS **********/
-                          /********** ROOMS OPERATIONS **********/
-                          //BUTTON COMPONENT
+                          //END DELETE HOME BUTTON
+                          /********** HOMES BUTTONS **********/
+                          /********** ROOMS BUTTONS **********/
+                          //CREATE ROOM BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -705,53 +363,13 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade600)),
-                                child: const Text("Add Room to home2"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes == null) {
-                                      signedProfile!.homes = [];
-                                    }
-                                    if (signedProfile!.homes!.length >= 2) {
-                                      RoomModel newRoom = RoomModel(
-                                        roomId: getCustomUniqueId(),
-                                        type: 'bedroom',
-                                        name:
-                                            'My room ${dateformatter.format(DateTime.now())}',
-                                        picture: 'https://google.com',
-                                        powerUsage: 20.1,
-                                        devices: null,
-                                      );
-
-                                      try {
-                                        await _roomsRepository!.createRoom(
-                                          newRoom,
-                                          signedProfile!.homes![1].homeId,
-                                        );
-
-                                        if (_roomsRepository!.status) {
-                                          signedProfile!.homes![1].rooms!
-                                              .add(newRoom);
-                                          print(
-                                              "Room added to 2nd home, current rooms:${signedProfile!.homes![1].rooms!.length}");
-                                        } else {
-                                          print(_roomsRepository!.errorMessage);
-                                        }
-                                      } on Exception catch (e) {
-                                        print(e.toString());
-                                      }
-                                    } else {
-                                      print(
-                                          "Not enough homes, Add at least 2 to perform room add to 2nd home");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                child: const Text("Add Room to Home2"),
+                                onPressed: () => createRoom(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          //BUTTON COMPONENT
+                          //END CREATE ROOM BUTTON
+                          //UPDATE ROOM BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -767,72 +385,13 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade600)),
-                                child: const Text("Update room n.2"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes != null) {
-                                      if (signedProfile!.homes!.length >= 2) {
-                                        if (signedProfile!.homes![1].rooms !=
-                                            null) {
-                                          if (signedProfile!
-                                                  .homes![1].rooms!.length >=
-                                              2) {
-                                            final currentRoom = signedProfile!
-                                                .homes![1].rooms![1];
-                                            RoomModel updatedRoom = RoomModel(
-                                              roomId: getCustomUniqueId(),
-                                              type: currentRoom.type,
-                                              name: currentRoom.name,
-                                              picture:
-                                                  'https://google.com/${dateformatter.format(DateTime.now())}',
-                                              powerUsage:
-                                                  currentRoom.powerUsage,
-                                              devices: currentRoom.devices,
-                                            );
-                                            try {
-                                              await _roomsRepository!
-                                                  .updateRoom(
-                                                updatedRoom,
-                                                signedProfile!.homes![1].homeId,
-                                              );
-
-                                              if (_roomsRepository!.status) {
-                                                signedProfile!.homes![1]
-                                                    .rooms![1] = updatedRoom;
-                                                print(
-                                                    "Room updated picture changed, last image: ${currentRoom.picture}, new image: ${updatedRoom.picture}");
-                                              } else {
-                                                print(_homesRepository!
-                                                    .errorMessage);
-                                              }
-                                            } on Exception catch (e) {
-                                              print(e.toString());
-                                            }
-                                          } else {
-                                            print(
-                                                "Too few ROOMS, at least 2 needed to perform update on ROOM n.2");
-                                          }
-                                        } else {
-                                          print(
-                                              "No ROOMS found on 2nd HOME, Add at least 2 to perform update on ROOM n.2");
-                                        }
-                                      } else {
-                                        print(
-                                            "Too few homes, at least 2 needed to perform update on home n.2");
-                                      }
-                                    } else {
-                                      print(
-                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                child: const Text("Update Room n.2"),
+                                onPressed: () => updateRoom(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          //BUTTON COMPONENT
+                          //END UPDATE ROOM BUTTON
+                          //DELETE ROOM BUTTON
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: SizedBox(
@@ -848,47 +407,81 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.blueGrey.shade600)),
-                                child: const Text("Delete last room"),
-                                onPressed: () async {
-                                  if (signedProfile != null) {
-                                    if (signedProfile!.homes != null) {
-                                      if (signedProfile!.homes!.isNotEmpty) {
-                                        HomeModel home2Delete = signedProfile!
-                                                .homes![
-                                            (signedProfile!.homes!.length - 1)];
-                                        try {
-                                          await _homesRepository!
-                                              .deleteHome(home2Delete.homeId);
-
-                                          if (_homesRepository!.status) {
-                                            signedProfile!.homes!
-                                                .remove(home2Delete);
-                                            print(
-                                                "Home deleted, current homes:${signedProfile!.homes!.length}");
-                                          } else {
-                                            print(
-                                                _homesRepository!.errorMessage);
-                                          }
-                                        } on Exception catch (e) {
-                                          print(e.toString());
-                                        }
-                                      } else {
-                                        print(
-                                            "No homes found, Add at least 1 to perform delete");
-                                      }
-                                    } else {
-                                      print(
-                                          "No homes found on this user, Add at least 2 to perform update on home n.2");
-                                    }
-                                  } else {
-                                    print("Logged user not found");
-                                  }
-                                },
+                                child: const Text("Delete last Room"),
+                                onPressed: () => deleteRoom(),
                               ),
                             ),
                           ),
-                          //END BUTTON COMPONENT
-                          /********** ROOMS OPERATIONS **********/
+                          //END DELETE ROOM BUTTON
+                          /********** ROOMS BUTTONS **********/
+                          /********** DEVICES BUTTONS **********/
+                          //CREATE DEVICE BUTTON
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade500)),
+                                child: const Text("Add Device to Room2"),
+                                onPressed: () => createDevice(),
+                              ),
+                            ),
+                          ),
+                          //END CREATE DEVICE BUTTON
+                          //UPDATE DEVICE BUTTON
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade500)),
+                                child: const Text("Update Device n.2"),
+                                onPressed: () => updateDevice(),
+                              ),
+                            ),
+                          ),
+                          //END UPDATE DEVICE BUTTON
+                          //DELETE DEVICE BUTTON
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: SizedBox(
+                              height: 45,
+                              width: 150,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade500)),
+                                child: const Text("Delete last Device"),
+                                onPressed: () => deleteDevice(),
+                              ),
+                            ),
+                          ),
+                          //END DELETE DEVICE BUTTON
+                          /********** DEVICES BUTTONS **********/
                         ],
                       ),
                     ),
@@ -901,6 +494,612 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
       ),
     );
   }
+
+  /********** AUTH METHODS **********/
+  void insertTestProfile() async {
+    /** Create not user-binded filled profile in db */
+    var tmpProfile = _createTestFilledProfile();
+    if (await _profileRepository.createUserProfile(tmpProfile) != null) {
+      print("PROFILE CREATED");
+    } else {
+      print("ERROR: ${_profileRepository.errorMessage}");
+    }
+  }
+
+  void emailSignUp() async {
+    if (signedProfile == null) {
+      /** If THERE ISNT a user profile object created
+       * then proceed to signin intend */
+      try {
+        /** Make sign up intend with email and password */
+        UserCredential userSigned =
+            await _firebaseAuth.createUserWithEmailAndPassword(
+                email: 'garcamcoder@gmail.com', password: "12345678");
+
+        /** If no error throwned
+         * get user info from credential */
+        User? newUserInfo = userSigned.user;
+
+        /** Create a test filled up object user profile
+         * binded to user authenticated */
+        UserProfile newUserProfile = _createTestFilledProfile(
+            testName: "George Garcam",
+            testAuthId: newUserInfo!.uid,
+            testEmail: newUserInfo.email.toString());
+
+        /** Create a user profile in DB from previous filledup
+         * object and stores the ID of created db doc */
+        newUserProfile.profileDocId =
+            await _profileRepository.createUserProfile(newUserProfile);
+        if (_profileRepository.status) {
+          /** If Status indicator is true means that profile
+           * was successfully created and stores
+           * the locally created profile in global var */
+          signedProfile = newUserProfile;
+          _homesRepository = UserHomeRepository(
+              userProfileDocId: signedProfile!.profileDocId!);
+          _roomsRepository =
+              RoomsRepository(userProfileDocId: signedProfile!.profileDocId!);
+          _devicesRepository =
+              DevicesRepository(userProfileDocId: signedProfile!.profileDocId!);
+        } else {
+          print(_profileRepository.errorMessage);
+        }
+      } on FirebaseAuthException catch (e) {
+        print("error: ${e.message}");
+      }
+    } else {
+      /** If THERE IS a user profile object then means that user was logged in */
+      print("User is already logged!!");
+    }
+  }
+
+  void emailSignIn() async {
+    if (signedProfile == null) {
+      /** If THERE ISNT a user profile object created
+                               * then proceed to signin intend */
+      try {
+        /** Perform login with email and password
+                                 * expecting for user credential
+                                 */
+        UserCredential userSigned =
+            await _firebaseAuth.signInWithEmailAndPassword(
+                email: 'garcamcoder@gmail.com', password: "12345678");
+
+        /** Trying to retrive the profile from DB using
+                                 * user authenticated ID */
+        signedProfile = await _profileRepository
+            .getUserProfileByAuthId(userSigned.user!.uid.toString());
+
+        if (_profileRepository.status) {
+          /** If retriving user profile from DB SUCCEEDS*/
+          print("User signed: ${signedProfile!.name}");
+          print(signedProfile);
+          _homesRepository = UserHomeRepository(
+              userProfileDocId: signedProfile!.profileDocId!);
+          _roomsRepository =
+              RoomsRepository(userProfileDocId: signedProfile!.profileDocId!);
+          _devicesRepository =
+              DevicesRepository(userProfileDocId: signedProfile!.profileDocId!);
+        } else {
+          /** If retriving user profile from DB FAILS*/
+          if (_profileRepository.errorCode == 404) {
+            /** If no Exception throwned (just profile not found)
+             * create one getting user info from credential */
+            print(
+                'USER WARNING: User profile no found in DB, starting profile creation');
+            User? newUserInfo = userSigned.user;
+
+            /** Create a test filled up object user profile
+             * binded to user authenticated */
+            UserProfile newUserProfile = _createTestFilledProfile(
+                testName: newUserInfo!.displayName.toString(),
+                testAuthId: newUserInfo.uid);
+
+            /** Create a user profile in DB from previous filledup
+             * object and stores the ID of created db doc */
+            newUserProfile.profileDocId =
+                await _profileRepository.createUserProfile(newUserProfile);
+            if (_profileRepository.status) {
+              /** If Status indicator is true means that profile
+               * was successfully created and stores
+               * the locally created profile in global var */
+              print("User profile created for: ${newUserProfile.name}");
+              signedProfile = newUserProfile;
+              _homesRepository = UserHomeRepository(
+                  userProfileDocId: signedProfile!.profileDocId!);
+              _roomsRepository = RoomsRepository(
+                  userProfileDocId: signedProfile!.profileDocId!);
+              _devicesRepository = DevicesRepository(
+                  userProfileDocId: signedProfile!.profileDocId!);
+            } else {
+              print(_profileRepository.errorMessage);
+            }
+          } else {
+            print(
+                "ERROR USERPROFILEPROVIDER: ${_profileRepository.errorMessage}");
+          }
+        }
+      } on FirebaseAuthException catch (e) {
+        print("AUTH ERROR: ${e.message}");
+      }
+    } else {
+      /** If THERE IS a user profile object then means that user was logged in */
+      print("User is already logged!!");
+    }
+  }
+
+  void updateProfile() async {
+    if (signedProfile != null) {
+      DateTime previousUpdate = signedProfile!.modified!;
+      try {
+        signedProfile =
+            await _profileRepository.updateUserProfile(signedProfile!);
+        if (_profileRepository.status) {
+          print(
+              "User updated at: ${signedProfile!.modified.toString()}, previous update in: ${previousUpdate.toString()}");
+        } else {
+          print("ERROR USERPROFILEPROVIDER:${_profileRepository.errorMessage}");
+        }
+      } on Exception catch (e) {
+        print("Error: ${e.toString()}");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void deleteProfile() async {
+    if (signedProfile != null) {
+      try {
+        if (await _profileRepository
+            .deleteUserProfile(signedProfile!.profileDocId!)) {
+          print("User profile successfully deleted.");
+          /**
+           * ! Delete account from Auth DB before trigger logout */
+          _firebaseAuth.signOut();
+        } else {
+          print("ERROR USERPROFILEPROVIDER:${_profileRepository.errorMessage}");
+        }
+      } on Exception catch (e) {
+        print("Error: ${e.toString()}");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void googleSignUp() async {
+    try {
+      // Trigger the authentication flow
+      GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // Obtain the auth details from the request
+      GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      // Create a new credential
+      var credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      UserCredential newGoogleUser =
+          await _firebaseAuth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      print("error: ${e.message}");
+    }
+  }
+
+  void googleSignIn() async {
+    try {
+      UserCredential userGoogleSigned =
+          await _firebaseAuth.signInWithEmailAndPassword(
+              email: 'jorgegarcia@gmail.com', password: "12345678");
+    } on FirebaseAuthException catch (e) {
+      print("error: ${e.message}");
+    }
+  }
+
+  void signOut() {
+    signedProfile = null;
+    _homesRepository = null;
+    _firebaseAuth.signOut();
+  }
+  /********** AUTH METHODS **********/
+
+  /********** HOMES METHODS **********/
+  void createHome() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      HomeModel newHome = HomeModel(
+          homeId: getCustomUniqueId(),
+          name: 'Beach House',
+          location: {
+            "address": "555 Oakroad, Winterforest",
+            "coords": "19N 19W 19.19",
+            "countryCode": "MX"
+          },
+          images: ["https://google.com", "https://google.com"],
+          rooms: null);
+
+      try {
+        await _homesRepository!.createHome(newHome);
+
+        if (_homesRepository!.status) {
+          signedProfile!.homes!.add(newHome);
+          print("HOME added, current HOMES: ${signedProfile!.homes!.length}");
+        } else {
+          print(_homesRepository!.errorMessage);
+        }
+      } on Exception catch (e) {
+        print(e.toString());
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void updateHome() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        HomeModel updatedHome = HomeModel(
+            homeId: signedProfile!.homes![1].homeId,
+            name: signedProfile!.homes![1].name,
+            location: signedProfile!.homes![1].location,
+            images: (List<String>.of(signedProfile!.homes![1].images!)
+              ..add("https://google.com")),
+            rooms: signedProfile!.homes![1].rooms);
+        try {
+          await _homesRepository!.updateHome(updatedHome);
+
+          if (_homesRepository!.status) {
+            signedProfile!.homes![1] = updatedHome;
+            print(
+                "Home updated added 1 image, current qty:${signedProfile!.homes![1].images!.length}");
+          } else {
+            print(_homesRepository!.errorMessage);
+          }
+        } on Exception catch (e) {
+          print(e.toString());
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 HOMES to perform updateHome on HOME 2");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void deleteHome() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.isNotEmpty) {
+        HomeModel home2Delete =
+            signedProfile!.homes![(signedProfile!.homes!.length - 1)];
+        try {
+          await _homesRepository!.deleteHome(home2Delete.homeId);
+
+          if (_homesRepository!.status) {
+            signedProfile!.homes!.remove(home2Delete);
+            print(
+                "HOME deleted, current HOMES:${signedProfile!.homes!.length}");
+          } else {
+            print(_homesRepository!.errorMessage);
+          }
+        } on Exception catch (e) {
+          print(e.toString());
+        }
+      } else {
+        print("Not enough HOMES, Add at least 1 HOME to perform deleteRoom");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+  /********** HOMES METHODS **********/
+
+  /********** ROOMS METHODS **********/
+  void createRoom() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        RoomModel newRoom = RoomModel(
+          roomId: getCustomUniqueId(),
+          type: 'bedroom',
+          name: 'My room ${dateformatter.format(DateTime.now())}',
+          picture: 'https://google.com',
+          powerUsage: 20.1,
+          devices: null,
+        );
+
+        try {
+          await _roomsRepository!.createRoom(
+            newRoom,
+            signedProfile!.homes![1].homeId,
+          );
+
+          if (_roomsRepository!.status) {
+            signedProfile!.homes![1].rooms!.add(newRoom);
+            print(
+                "ROOM added to HOME 2, current ROOMS:${signedProfile!.homes![1].rooms!.length}");
+          } else {
+            print(_roomsRepository!.errorMessage);
+          }
+        } on Exception catch (e) {
+          print(e.toString());
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 to perform createDevice on HOME 2");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void updateRoom() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        if (signedProfile!.homes![1].rooms!.length >= 2) {
+          final currentRoom = signedProfile!.homes![1].rooms![1];
+          RoomModel updatedRoom = RoomModel(
+            roomId: getCustomUniqueId(),
+            type: currentRoom.type,
+            name: currentRoom.name,
+            picture:
+                'https://google.com/${dateformatter.format(DateTime.now())}',
+            powerUsage: currentRoom.powerUsage,
+            devices: currentRoom.devices,
+          );
+          try {
+            await _roomsRepository!.updateRoom(
+              updatedRoom,
+              signedProfile!.homes![1].homeId,
+            );
+
+            if (_roomsRepository!.status) {
+              signedProfile!.homes![1].rooms![1] = updatedRoom;
+              print(
+                  "Room updated picture changed, last image: ${currentRoom.picture}, new image: ${updatedRoom.picture}");
+            } else {
+              print(_homesRepository!.errorMessage);
+            }
+          } on Exception catch (e) {
+            print(e.toString());
+          }
+        } else {
+          print(
+              "To few ROOMS, Add at least 2 ROOMS to perform updateRoom on ROOM 2");
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 HOMES and 2 ROOMS to perform updateRoom on ROOM 2");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void deleteRoom() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        if (signedProfile!.homes![1].rooms!.isNotEmpty) {
+          RoomModel room2Delete = signedProfile!.homes![1].rooms!.last;
+          try {
+            await _roomsRepository!.deleteRoom(
+                room2Delete.roomId, signedProfile!.homes![1].homeId);
+
+            if (_roomsRepository!.status) {
+              signedProfile!.homes![1].rooms!.remove(room2Delete);
+              print(
+                  "ROOM deleted from HOME 2, current ROOMS:${signedProfile!.homes![1].rooms!.length}");
+            } else {
+              print(_homesRepository!.errorMessage);
+            }
+          } on Exception catch (e) {
+            print(e.toString());
+          }
+        } else {
+          print("Not enough ROOMS, Add at least 1 ROOM to perform deleteRoom");
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 HOMES and 1 ROOM to perform deleteRoom");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+  /********** ROOMS METHODS **********/
+
+  /********** DEVICES METHODS **********/
+  void createDevice() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        if (signedProfile!.homes![1].rooms!.length >= 2) {
+          if (signedProfile!.homes![1].rooms![1].devices == null) {
+            signedProfile!.homes![1].rooms![1].devices = [];
+          }
+          DeviceModel newDevice = DeviceModel(
+            deviceId: getCustomUniqueId(),
+            name: 'My device ${dateformatter.format(DateTime.now())}',
+            type: 'enlightment',
+            controller: {
+              'param1': 'val1',
+              'param2': 'val2',
+              'param3': 'val3',
+            },
+            powerMeasure: 200.0,
+          );
+
+          try {
+            await _devicesRepository!.createDevice(
+              newDevice,
+              signedProfile!.homes![1].homeId,
+              signedProfile!.homes![1].rooms![1].roomId,
+            );
+
+            if (_roomsRepository!.status) {
+              signedProfile!.homes![1].rooms![1].devices!.add(newDevice);
+              print(
+                  "DEVICE added to ROOM 2, current DEVICES:${signedProfile!.homes![1].rooms![1].devices!.length}");
+            } else {
+              print(_roomsRepository!.errorMessage);
+            }
+          } on Exception catch (e) {
+            print(e.toString());
+          }
+        } else {
+          print(
+              "Not enough ROOMS in HOME 2, Add at least 2 to perform createDevice on ROOM 2");
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 then add 2 ROOMS to perform createDevice on ROOM 2 in HOME 2");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void updateDevice() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        if (signedProfile!.homes![1].rooms!.length >= 2) {
+          if (signedProfile!.homes![1].rooms![1].devices == null) {
+            signedProfile!.homes![1].rooms![1].devices = [];
+          }
+          if (signedProfile!.homes![1].rooms![1].devices!.length >= 2) {
+            final currentDevice =
+                signedProfile!.homes![1].rooms![1].devices![1];
+            DeviceModel updatedDevice = DeviceModel(
+              deviceId: getCustomUniqueId(),
+              name: currentDevice.name,
+              type: currentDevice.type,
+              controller: currentDevice.controller,
+              powerMeasure: currentDevice.powerMeasure + 10.1,
+            );
+            try {
+              await _devicesRepository!.updateDevice(
+                updatedDevice,
+                signedProfile!.homes![1].homeId,
+                signedProfile!.homes![1].rooms![1].roomId,
+              );
+
+              if (_devicesRepository!.status) {
+                signedProfile!.homes![1].rooms![1].devices![1] = updatedDevice;
+                print(
+                    "DEVICE updated, last power measure: ${currentDevice.powerMeasure}, new: ${updatedDevice.powerMeasure}");
+              } else {
+                print(_devicesRepository!.errorMessage);
+              }
+            } on Exception catch (e) {
+              print(e.toString());
+            }
+          } else {
+            print(
+                "Too few DEVICES, at least 2 needed to perform update on DEVICE 2");
+          }
+        } else {
+          print(
+              "Not enough ROOMS, Add at least 2 ROOMS then 2 DEVICES to perform updateDevice on DEVICE 2");
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 HOMES, 2 ROOMS and 2 DEVICES to perform updateDevice on DEVICE 2");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+
+  void deleteDevice() async {
+    if (signedProfile != null) {
+      if (signedProfile!.homes == null) {
+        signedProfile!.homes = [];
+      }
+      if (signedProfile!.homes!.length >= 2) {
+        if (signedProfile!.homes![1].rooms == null) {
+          signedProfile!.homes![1].rooms = [];
+        }
+        if (signedProfile!.homes![1].rooms!.length >= 2) {
+          if (signedProfile!.homes![1].rooms![1].devices == null) {
+            signedProfile!.homes![1].rooms![1].devices = [];
+          }
+          if (signedProfile!.homes![1].rooms![1].devices!.isNotEmpty) {
+            DeviceModel device2Delete =
+                signedProfile!.homes![1].rooms![1].devices!.last;
+            try {
+              await _devicesRepository!.deleteDevice(
+                  device2Delete.deviceId,
+                  signedProfile!.homes![1].homeId,
+                  signedProfile!.homes![1].rooms![1].roomId);
+
+              if (_devicesRepository!.status) {
+                signedProfile!.homes![1].rooms![1].devices!
+                    .remove(device2Delete);
+                print(
+                    "1 DEVICE deleted from ROOM 2, current DEVICES:${signedProfile!.homes![1].rooms![1].devices!.length}");
+              } else {
+                print(_homesRepository!.errorMessage);
+              }
+            } on Exception catch (e) {
+              print(e.toString());
+            }
+          } else {
+            print(
+                "Not enough DEVICES, Add at least 1 DEVICE to perform deleteDevice");
+          }
+        } else {
+          print(
+              "Not enough ROOMS, Add at least 2 ROOMS and 1 DEVICE to perform deleteDevice");
+        }
+      } else {
+        print(
+            "Not enough HOMES, Add at least 2 HOMES, 2 ROOMS and 1 DEVICE to perform deleteDevice");
+      }
+    } else {
+      print("Logged user not found");
+    }
+  }
+  /********** DEVICES METHODS **********/
 
   UserProfile _createTestFilledProfile({
     String testName = "User Test",

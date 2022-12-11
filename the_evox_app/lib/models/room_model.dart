@@ -12,7 +12,7 @@ class RoomModel {
   final String name;
   final String picture;
   final double powerUsage;
-  final List<DeviceModel>? devices;
+  late List<DeviceModel>? devices;
 
   RoomModel({
     required this.roomId,
@@ -20,7 +20,7 @@ class RoomModel {
     required this.name,
     required this.picture,
     required this.powerUsage,
-    required this.devices,
+    this.devices,
   });
 
   RoomModel copyWith({

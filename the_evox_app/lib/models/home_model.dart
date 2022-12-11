@@ -10,15 +10,15 @@ class HomeModel {
   final String homeId;
   final String name;
   final Map<String, dynamic> location;
-  final List<String>? images;
-  final List<RoomModel>? rooms;
+  late List<String>? images;
+  late List<RoomModel>? rooms;
 
   HomeModel({
     required this.homeId,
     required this.name,
     required this.location,
-    required this.images,
-    required this.rooms,
+    this.images,
+    this.rooms,
   });
 
   HomeModel copyWith({
