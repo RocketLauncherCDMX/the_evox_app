@@ -4,21 +4,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/user_profile_model.dart';
 
+/**
+   * TODO: add enum out of UserProfileRepository class (enum UserProfileRepositoryStatus{}) to improve error code handling
+   */
+
+//Firestore user profile handling
 class UserProfileRepository {
   late CollectionReference dbUsersCollection;
 
+  //Global variables for class state handling
+  //Update these 3 vars using _setRepositoryState method
   bool status = false;
   String errorMessage = "";
   int? errorCode;
 
+  //Constructor establishes database connection to 'users' collection
   UserProfileRepository() {
     dbUsersCollection = FirebaseFirestore.instance.collection("users");
   }
 
-  /**
-   * TODO: document possible errors (mabe just check fireb docs)
-   */
-
+  //Creates a userprofile document in Firestore filled with [newProfileData] object
+  //
+  //On success returns [docCreatedId] as document Id, must be stored in UserProfile object
+  //On failure or error returns [docCreatedId] as null
   Future<String?> createUserProfile(UserProfile newProfileData) async {
     DateTime currentDt = DateTime.now();
     String? docCreatedId = "";
@@ -31,11 +39,16 @@ class UserProfileRepository {
       _setRepositoryState(true, "", 0);
     } on FirebaseException catch (e) {
       docCreatedId = null;
-      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 400);
+      _setRepositoryState(
+          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 400);
     }
     return docCreatedId;
   }
 
+  //Searches a profile document for given authenticated user id [userAuthId]
+  //
+  //On success returns [profileData] filled with Firestore's profile document
+  //On failure or error returns [profileData] as null
   Future<UserProfile?> getUserProfileByAuthId(String userAuthId) async {
     UserProfile? profileData;
     try {
@@ -58,12 +71,18 @@ class UserProfileRepository {
         _setRepositoryState(false, "No matching profile for userAuthId", 404);
       }
     } on FirebaseException catch (e) {
+      //Error on Firestore connection
       profileData = null;
-      _setRepositoryState(false, "FIREBASE CONN ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(
+          false, "FIREBASE CONN ERROR: ${e.message!.toLowerCase()}", 1);
     }
     return profileData;
   }
 
+  //Updates user's name,email,photo AND/OR countryCode (only parameters given to method)
+  //
+  //On success returns [updatedProfile] object, filled with updated information
+  //On failure or error returns [updatedProfile] as null
   Future<UserProfile> updateUserProfile(
     UserProfile currentProfile, {
     String? name = "",
@@ -81,7 +100,8 @@ class UserProfileRepository {
         if (email != "") "email": email,
         if (photo != "") "photo": photo,
         if (countryCode != "") "countryCode": countryCode,
-        "modified": modificationTimestamp,
+        "modified":
+            modificationTimestamp, //Sets modified field with current date time
       });
       _setRepositoryState(true, "", 1);
       updatedProfile = UserProfile(
@@ -100,11 +120,16 @@ class UserProfileRepository {
       );
       return updatedProfile;
     } on FirebaseException catch (e) {
-      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(
+          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
       return currentProfile;
     }
   }
 
+  //Remove user profile's specified by [docProfileId]
+  //
+  //On success true is returned
+  //On failure or error false is returned
   Future<bool> deleteUserProfile(String docProfileId) async {
     try {
       await dbUsersCollection
@@ -115,16 +140,17 @@ class UserProfileRepository {
       _setRepositoryState(true, "", 0);
       return true;
     } on FirebaseException catch (e) {
-      _setRepositoryState(false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
+      _setRepositoryState(
+          false, "FIREBASE ERROR: ${e.message!.toLowerCase()}", 1);
       return false;
     }
   }
 
 // ignore_for_file: no_leading_underscores_for_local_identifiers
-//This 'repository state setter' method must be used before every
-//posible result of each method ends
-//* @param _status true for success on method, false for fail on method
-  void _setRepositoryState(bool _status, String _errorMessage, int? _errorCode) {
+// This 'repository state setter' method must be used before returning o throwing on each possible method result
+// set [_status] true for success, false for fail or error
+  void _setRepositoryState(
+      bool _status, String _errorMessage, int? _errorCode) {
     status = _status;
     errorMessage = _errorMessage;
     errorCode = _errorCode;
