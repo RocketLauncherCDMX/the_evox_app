@@ -11,7 +11,7 @@ class UserProfile {
   final String userId;
   String name;
   String email;
-  final String photo;
+  final String? photo;
   final String? countryCode;
   late List<HomeModel>? homes;
   late List<AuthorizationModel>? authorizations;
@@ -25,14 +25,14 @@ class UserProfile {
     required this.userId,
     required this.name,
     required this.email,
-    required this.photo,
-    required this.countryCode,
+    this.photo,
+    this.countryCode,
     this.homes,
     this.authorizations,
     this.invites,
     this.created,
     this.modified,
-    required this.verified,
+    this.verified,
     this.profileDocId,
   });
 
@@ -74,8 +74,9 @@ class UserProfile {
       'photo': photo,
       'countryCode': countryCode,
       'homes': (homes != null) ? homes!.map((x) => x.toMap()).toList() : null,
-      'authorizations':
-          (authorizations != null) ? authorizations!.map((x) => x.toMap()).toList() : null,
+      'authorizations': (authorizations != null)
+          ? authorizations!.map((x) => x.toMap()).toList()
+          : null,
       'invites': (invites != null) ? invites!.map((x) => x).toList() : null,
       'created': created,
       'modified': modified,
@@ -164,8 +165,10 @@ class UserProfile {
       invites: (data?['invites'] != null)
           ? (data?['invites'] is Iterable ? List.from(data?['invites']) : null)
           : null,
-      created: DateTime.fromMicrosecondsSinceEpoch(auxCreated.millisecondsSinceEpoch),
-      modified: DateTime.fromMicrosecondsSinceEpoch(auxModified.millisecondsSinceEpoch),
+      created: DateTime.fromMicrosecondsSinceEpoch(
+          auxCreated.millisecondsSinceEpoch),
+      modified: DateTime.fromMicrosecondsSinceEpoch(
+          auxModified.millisecondsSinceEpoch),
       verified: (data?['verified'] != null) ? data!['verified'] as bool : false,
       profileDocId: snapshot.id,
     );
