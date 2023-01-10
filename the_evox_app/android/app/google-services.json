@@ -29,6 +29,13 @@
             {
               "client_id": "228479499339-4hqdevqsd2mq911uppobt67s63tk5977.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "228479499339-bipammr4ab166e5kgkhqcudvlmrpprav.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.theEvoxApp"
+              }
             }
           ]
         }
