@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
 
+import 'package:the_evox_app/models/home_model.dart';
+import 'package:the_evox_app/repositories/user_home_repository.dart';
+import 'package:intl/intl.dart';
+
 class AddRooms extends StatefulWidget {
   const AddRooms({Key? key}) : super(key: key);
 
@@ -11,6 +15,23 @@ class AddRooms extends StatefulWidget {
 
 class _MyWidgetState extends State<AddRooms> {
   final _textController = TextEditingController();
+
+  final DateFormat dateformatter =
+      DateFormat('yMdHms'); //AUXILIAR PARA CREAR ID UNICO
+  //Instanciar UserHomeRepository (es necesario pasarle el userSigned.profileDocId
+  //como argumento para que sepa a qué usuario se le agregará la casa)
+  //por ahora lo agregué hardcodeado
+  final UserHomeRepository _homeRepository =
+      UserHomeRepository(userProfileDocId: "ZHED3TbjipfP6joT6qNy");
+
+  String newHomeName = 'Lake Home'; // "Lake Home"
+  String newHomeAddress =
+      '555 Oakroad, Winterforest'; // "555 Oakroad, Winterforest"
+  String newHomeCoords = '19N 19W 19.19'; // "19N 19W 19.19"
+  String newHomecountryCode = 'MX'; //"
+
+  late HomeModel newHomeObj;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,13 +181,34 @@ class _MyWidgetState extends State<AddRooms> {
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0)))),
-                onPressed: () => {
+                onPressed: () {
+                  //Crear el objeto de nueva casa
+                  newHomeObj = HomeModel(
+                    homeId: dateformatter.format(DateTime.now()),
+                    name: newHomeName,
+                    location: {
+                      "address": newHomeAddress,
+                      "coords": newHomeCoords,
+                      "countryCode": newHomecountryCode,
+                    },
+                  );
+
+                  _homeRepository.createHome(newHomeObj);
+                  if (_homeRepository.status) {
+                    //Agregar el objeto de casa nueva en el objeto de signedUser
+                    //p.e.
+                    //signedUser.homes.add(newHomeObj);
+                  } else {
+                    //Mostrar error
+                    //print(_homeRepository.errorMessage);
+                  }
+
                   Navigator.pushReplacement<void, void>(
                     context,
                     MaterialPageRoute<void>(
                       builder: (BuildContext context) => const MainScreen(),
                     ),
-                  ),
+                  );
                 },
                 child: const Text('Save'),
               ),

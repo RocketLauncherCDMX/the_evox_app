@@ -86,12 +86,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.grey.shade400)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.grey.shade400)),
                                 child: const Text("Inserting Test"),
                                 onPressed: () => insertTestProfile(),
                               ),
@@ -108,12 +110,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
-                                    backgroundColor: MaterialStateProperty.all<Color>(
-                                        Colors.lightGreen.shade300)),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.lightGreen.shade300)),
                                 child: const Text("Email SignUp"),
                                 onPressed: () => emailSignUp(),
                               ),
@@ -128,12 +132,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
-                                    backgroundColor: MaterialStateProperty.all<Color>(
-                                        Colors.lightGreen.shade300)),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.lightGreen.shade300)),
                                 child: const Text("Email SignIn"),
                                 onPressed: () => emailSignIn(),
                               ),
@@ -150,12 +156,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.cyan.shade800)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.cyan.shade800)),
                                 child: const Text("Update User"),
                                 onPressed: () => updateProfile(),
                               ),
@@ -170,12 +178,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.cyan.shade800)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.cyan.shade800)),
                                 child: const Text("Delete profile"),
                                 onPressed: () => deleteProfile(),
                               ),
@@ -192,12 +202,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.red.shade500)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red.shade500)),
                                 child: const Text("Google SignUp"),
                                 onPressed: () => googleSignUp(),
                               ),
@@ -212,12 +224,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.red.shade500)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red.shade500)),
                                 child: const Text("Google SignIn"),
                                 onPressed: () => googleSignIn(),
                               ),
@@ -233,12 +247,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.black)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.black)),
                                 child: const Text("SignOut"),
                                 onPressed: () => signOut(),
                               ),
@@ -271,12 +287,14 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
                                     backgroundColor:
-                                        MaterialStateProperty.all<Color>(Colors.blueGrey.shade700)),
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blueGrey.shade700)),
                                 child: const Text("Add Home"),
                                 onPressed: () => createHome(),
                               ),
@@ -291,7 +309,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
@@ -312,7 +331,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
                               width: 150,
                               child: ElevatedButton(
                                 style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     )),
@@ -580,8 +600,10 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
             /** Create a test filled up object user profile
              * binded to user authenticated */
             UserProfile newUserProfile = _createTestFilledProfile(
-                testName: newUserInfo!.displayName.toString(),
-                testAuthId: newUserInfo.uid);
+              testName: newUserInfo!.displayName.toString(),
+              testEmail: newUserInfo.email.toString(),
+              testAuthId: newUserInfo.uid,
+            );
 
             /** Create a user profile in DB from previous filledup
              * object and stores the ID of created db doc */
@@ -1120,11 +1142,15 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
             "coords": "19N 19W 19.19",
             "countryCode": "MX"
           },
-          images: ["http://google.com/home1.jpg", "http://google.com/home2.jpg"],
+          images: [
+            "http://google.com/home1.jpg",
+            "http://google.com/home2.jpg"
+          ],
           rooms: userHomeRooms),
     ];
     var userAuthorizations = [
-      (AuthorizationModel(guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
+      (AuthorizationModel(
+          guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
     ];
     return UserProfile(
         userId: testAuthId,
@@ -1141,7 +1167,8 @@ class _TestingrepoScreenState extends State<TestingrepoScreen> {
   }
 
   String getCustomUniqueId() {
-    const String pushChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const String pushChars =
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     int lastPushTime = 0;
     List lastRandChars = [];
     int now = DateTime.now().millisecondsSinceEpoch;
