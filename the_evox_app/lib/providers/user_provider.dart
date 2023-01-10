@@ -33,7 +33,8 @@ var userHomeRooms = <RoomModel>[
       name: "Living room",
       picture: "http://google.com/home1room1.jpg",
       powerUsage: 2535.0,
-      devices: userHomeRoomDevices),
+      devices: userHomeRoomDevices,
+      type: ''),
 ];
 
 final homeRepositoryProvider = StateProvider<UserHomeRepository?>((ref) {
@@ -68,7 +69,8 @@ final homeRepositoryProvider = StateProvider<UserHomeRepository?>((ref) {
 });*/
 
 var userAuthorizations = [
-  (AuthorizationModel(guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
+  (AuthorizationModel(
+      guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
 ];
 
 var userStateProvider = StateProvider<UserProfile?>((ref) {

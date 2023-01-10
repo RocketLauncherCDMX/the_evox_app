@@ -12,6 +12,18 @@ class _OtpState extends State<Otp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Center(),
+        ));
+  }
+}
+
+/*class _OtpState extends State<Otp> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -178,7 +190,7 @@ class _OtpState extends State<Otp> {
     return SizedBox(
       height: 60,
       child: AspectRatio(
-        aspectRatio: 0.8,
+        aspectRatio: .8,
         child: TextField(
           autofocus: true,
           onChanged: (value) {
@@ -192,7 +204,7 @@ class _OtpState extends State<Otp> {
           showCursor: false,
           readOnly: false,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           keyboardType: TextInputType.number,
           maxLength: 1,
           decoration: InputDecoration(
@@ -209,4 +221,4 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-}
+}*/

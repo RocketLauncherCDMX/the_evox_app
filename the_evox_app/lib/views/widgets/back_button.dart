@@ -11,7 +11,8 @@ class CustomBackButton extends ConsumerWidget {
     return TextButton(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.black),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(roundness),
             ))),
         onPressed: () => {

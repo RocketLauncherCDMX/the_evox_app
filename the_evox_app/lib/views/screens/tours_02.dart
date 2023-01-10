@@ -34,12 +34,16 @@ class Tours02 extends StatelessWidget {
               height: 50,
               width: 150,
               decoration: BoxDecoration(
-                  color: Colors.orangeAccent, borderRadius: BorderRadius.circular(30)),
+                  color: Colors.orangeAccent,
+                  borderRadius: BorderRadius.circular(30)),
               alignment: Alignment.center,
               child: const Text(
                 'Security',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white),
               ),
             ),
             const SizedBox(height: 20),
@@ -103,7 +107,7 @@ class Tours02 extends StatelessWidget {
               onPressed: () => {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginForm()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 ),
               },
             ),

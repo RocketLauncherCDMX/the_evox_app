@@ -7,19 +7,20 @@ import 'package:the_evox_app/models/device_model.dart';
 import 'package:the_evox_app/models/home_model.dart';
 import 'package:the_evox_app/models/room_model.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
-import 'package:the_evox_app/providers/auth_provider.dart';
+import 'package:the_evox_app/repositories/auth_provider_repository.dart';
 import 'package:the_evox_app/providers/user_provider.dart';
 import 'package:the_evox_app/repositories/user_home_repository.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
+import 'package:the_evox_app/views/widgets/alert_dialog_ok.dart';
 
-class RegisterForm extends ConsumerStatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterScreen> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends ConsumerState<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterScreen> {
   bool _obscureText = true;
   bool _agreementIsChecked = false;
   final _userName = TextEditingController();
@@ -59,11 +60,15 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         height: 50,
                         child: OutlinedButton(
                             style: ButtonStyle(
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        side: const BorderSide(color: Colors.grey)))),
-                            onPressed: () => {Navigator.of(context).pop(const Tours03())},
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        side: const BorderSide(
+                                            color: Colors.grey)))),
+                            onPressed: () =>
+                                {Navigator.of(context).pop(const Tours03())},
                             child: const Icon(
                               Icons.arrow_back_ios_new,
                               color: Colors.grey,
@@ -76,7 +81,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       alignment: Alignment.center,
                       child: const Text(
                         'Let\'s get started',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 30),
                       ),
                     ),
                   ),
@@ -88,6 +94,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userName,
                             validator: _validateName,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            keyboardType: TextInputType.name,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             textCapitalization: TextCapitalization.sentences,
@@ -95,13 +104,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               filled: true,
                               fillColor: Colors.grey.shade200,
                               hintText: 'Full name',
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black),
+                                borderSide:
+                                    const BorderSide(color: Colors.black),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.white),
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
                             ),
@@ -110,6 +122,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userEmail,
                             validator: _validateEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             textCapitalization: TextCapitalization.none,
@@ -117,13 +132,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               filled: true,
                               fillColor: Colors.grey.shade200,
                               hintText: 'Email',
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.black),
+                                borderSide:
+                                    const BorderSide(color: Colors.black),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
                               enabledBorder: UnderlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.white),
+                                borderSide:
+                                    const BorderSide(color: Colors.white),
                                 borderRadius: BorderRadius.circular(25.7),
                               ),
                             ),
@@ -132,6 +150,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userPassword,
                             validator: _validatePassword,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             obscureText: _obscureText,
@@ -140,19 +160,24 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 filled: true,
                                 fillColor: Colors.grey.shade200,
                                 hintText: 'Password',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20)),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.black),
+                                  borderSide:
+                                      const BorderSide(color: Colors.black),
                                   borderRadius: BorderRadius.circular(25.7),
                                 ),
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.white),
+                                  borderSide:
+                                      const BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(25.7),
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     // Based on passwordVisible state choose the icon
-                                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                                    _obscureText
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
                                     color: Theme.of(context).primaryColorDark,
                                   ),
                                   onPressed: () {
@@ -204,63 +229,77 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     height: 60,
                     child: ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.black),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(25.0)))),
                       onPressed: () async {
-                        ref.read(userNameProvider.notifier).state = _userName.text;
-                        ref.read(userEmailProvider.notifier).state = _userEmail.text;
+                        if (_agreementIsChecked == true) {
+                          ref.read(userNameProvider.notifier).state =
+                              _userName.text;
+                          ref.read(userEmailProvider.notifier).state =
+                              _userEmail.text;
 
-                        if (signedProfile == null) {
-                          /** If THERE ISNT a user profile object created
-                               * then proceed to signin intend */
-                          try {
-                            /** Make sign up intend with email and password */
-                            UserCredential userSigned =
-                                await firebaseAuth.createUserWithEmailAndPassword(
-                                    email: ref.read(userEmailProvider),
-                                    password: _userPassword.text);
-                            print(ref.read(userNameProvider));
-                            print(ref.read(userEmailProvider));
+                          if (signedProfile == null) {
+                            /** If THERE ISNT a user profile object created
+                                 * then proceed to signin intend */
+                            try {
+                              /** Make sign up intend with email and password */
+                              UserCredential userSigned = await firebaseAuth
+                                  .createUserWithEmailAndPassword(
+                                      email: ref.read(userEmailProvider),
+                                      password: _userPassword.text);
+                              print(ref.read(userNameProvider));
+                              print(ref.read(userEmailProvider));
 
-                            /** If no error throwned
-                                 * get user info from credential */
-                            User? newUserInfo = userSigned.user;
+                              /** If no error throwned
+                                   * get user info from credential */
+                              User? newUserInfo = userSigned.user;
 
-                            /** Create a test filled up object user profile
-                                 * binded to user authenticated */
-                            UserProfile newUserProfile = _createTestFilledProfile(
-                                testName: newUserInfo!.displayName.toString(),
-                                testAuthId: newUserInfo.uid);
+                              /** Create a test filled up object user profile
+                                   * binded to user authenticated */
+                              UserProfile newUserProfile =
+                                  _createTestFilledProfile(
+                                      testName:
+                                          newUserInfo!.displayName.toString(),
+                                      testAuthId: newUserInfo.uid);
 
-                            newUserProfile.email = _userEmail.text;
-                            newUserProfile.name = _userName.text;
+                              newUserProfile.email = _userEmail.text;
+                              newUserProfile.name = _userName.text;
 
-                            /** Create a user profile in DB from previous filledup
-                                 * object and stores the ID of created db doc */
-                            newUserProfile.profileDocId =
-                                await profileRepository.createUserProfile(newUserProfile);
-                            if (profileRepository.status) {
-                              /** If Status indicator is true means that profile
-                                     * was successfully created and stores
-                                     * the locally created profile in global var */
-                              signedProfile = newUserProfile;
-                              homeRepository = UserHomeRepository(
-                                  userProfileDocId: signedProfile!.profileDocId!);
-                            } else {
-                              print(profileRepository.errorMessage);
+                              /** Create a user profile in DB from previous filledup
+                                   * object and stores the ID of created db doc */
+                              newUserProfile.profileDocId =
+                                  await profileRepository
+                                      .createUserProfile(newUserProfile);
+                              if (profileRepository.status) {
+                                /** If Status indicator is true means that profile
+                                       * was successfully created and stores
+                                       * the locally created profile in global var */
+                                signedProfile = newUserProfile;
+                                homeRepository = UserHomeRepository(
+                                    userProfileDocId:
+                                        signedProfile!.profileDocId!);
+                              } else {
+                                print(profileRepository.errorMessage);
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              print("error: ${e.message}");
                             }
-                          } on FirebaseAuthException catch (e) {
-                            print("error: ${e.message}");
+                          } else {
+                            /** If THERE IS a user profile object then means that user was logged in */
+                            print("User is already logged!!");
                           }
+
+                          //ref.watch(isUserSignedProvider.notifier).state
                         } else {
-                          /** If THERE IS a user profile object then means that user was logged in */
-                          print("User is already logged!!");
+                          showAlertDialog(context,
+                              'Please, read and accept the privacy policy and user agreement first');
                         }
-                        setState(() {
-                          Navigator.pushReplacement(
-                              context, MaterialPageRoute(builder: (context) => const MainScreen()));
-                        });
+                        if (!mounted) return;
                       },
                       child: const Text('Register'),
                     ),
@@ -278,7 +317,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                             onPressed: () async {
                               try {
                                 // Trigger the authentication flow
-                                GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+                                GoogleSignInAccount? googleUser =
+                                    await GoogleSignIn().signIn();
 
                                 // Obtain the auth details from the request
                                 GoogleSignInAuthentication? googleAuth =
@@ -291,20 +331,23 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 );
 
                                 UserCredential newGoogleUser =
-                                    await firebaseAuth.signInWithCredential(credential);
+                                    await firebaseAuth
+                                        .signInWithCredential(credential);
                                 print('UserCrendetial: $credential');
 
                                 /** Create a user profile in DB from previous filledup
                                  * object and stores the ID of created db doc */
                                 signedProfile?.profileDocId =
-                                    await profileRepository.createUserProfile(signedProfile!);
+                                    await profileRepository
+                                        .createUserProfile(signedProfile!);
                                 if (profileRepository.status) {
                                   /** If Status indicator is true means that profile
                                * was successfully created and stores
                                * the locally created profile in global var */
                                   signedProfile = signedProfile;
                                   homeRepository = UserHomeRepository(
-                                      userProfileDocId: signedProfile!.profileDocId!);
+                                      userProfileDocId:
+                                          signedProfile!.profileDocId!);
                                 } else {
                                   print(profileRepository.errorMessage);
                                 }
@@ -312,15 +355,21 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                 print("error: ${e.message}");
                               }
 
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (context) => const MainScreen()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MainScreen()));
                             },
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(Colors.grey.shade300),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.grey.shade300),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.0)))),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0)))),
                             child: Image.asset('assets/icons/goggle_logo.png')),
                       ),
                       const SizedBox(width: 10),
@@ -331,10 +380,13 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                             onPressed: () => {},
                             style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(Colors.blue.shade700),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.blue.shade700),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.0)))),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0)))),
                             child: Image.asset(
                               'assets/icons/fb_logo.png',
                               width: 35,
@@ -349,10 +401,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         child: ElevatedButton(
                             onPressed: () => {},
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25.0)))),
+                                        borderRadius:
+                                            BorderRadius.circular(25.0)))),
                             child: Image.asset('assets/icons/apple_logo.png')),
                       ),
                     ],
@@ -370,7 +426,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                         onPressed: () => {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginForm()),
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
                           ),
                         },
                       )
@@ -409,7 +466,8 @@ String? _validatePassword(String? formPassword) {
     return 'Password is required';
   }
 
-  String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String pattern =
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   RegExp regex = RegExp(pattern);
   if (!regex.hasMatch(formPassword)) {
     return 'Minimum 8 chars, uppercase, number and symbol.';
@@ -438,7 +496,8 @@ UserProfile _createTestFilledProfile({
         name: "Living room",
         picture: "http://google.com/home1room1.jpg",
         powerUsage: 2535.0,
-        devices: userHomeRoomDevices),
+        devices: userHomeRoomDevices,
+        type: ''),
   ];
   var userHomes = [
     HomeModel(
@@ -453,7 +512,8 @@ UserProfile _createTestFilledProfile({
         rooms: userHomeRooms),
   ];
   var userAuthorizations = [
-    (AuthorizationModel(guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
+    (AuthorizationModel(
+        guestId: "02020202", homesAuthorized: ["AAAAAAAA", "BBBBBBBB"]))
   ];
   return UserProfile(
       userId: testAuthId,
