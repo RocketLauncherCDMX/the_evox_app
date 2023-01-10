@@ -492,12 +492,13 @@ UserProfile _createTestFilledProfile({
   ];
   var userHomeRooms = [
     RoomModel(
-        roomId: "a1a1a1a1",
-        name: "Living room",
-        picture: "http://google.com/home1room1.jpg",
-        powerUsage: 2535.0,
-        devices: userHomeRoomDevices,
-        type: ''),
+      roomId: "a1a1a1a1",
+      type: "living",
+      name: "Living room",
+      picture: "http://google.com/home1room1.jpg",
+      powerUsage: 2535.0,
+      devices: userHomeRoomDevices,
+    ),
   ];
   var userHomes = [
     HomeModel(
