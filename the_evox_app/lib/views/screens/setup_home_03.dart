@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:the_evox_app/constants/permissions.dart';
 import 'package:the_evox_app/views/screens/setup_home_04.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -16,6 +17,13 @@ class _MyWidgetState extends State<HomeAddress> {
     target: LatLng(0, 0),
     zoom: 10,
   );
+
+  /*@override
+  void initState() {
+    super.initState();
+    AppPermission().showPermissionLocation(context);
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,24 +170,44 @@ class _MyWidgetState extends State<HomeAddress> {
                 ),
               ),
               SizedBox(
-                width: 200,
-                height: 60,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.black),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0)))),
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AddRooms()),
-                    ),
-                  },
-                  child: const Text('Next'),
-                ),
-              ),
+                  width: 200,
+                  height: 200,
+                  child: Column(
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(25.0)))),
+                        onPressed: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AddRooms()),
+                          ),
+                        },
+                        child: const Text('Next'),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.black),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(25.0)))),
+                        onPressed: () => {
+                          LocationPermission(),
+                        },
+                        child: const Text('Grant Location'),
+                      ),
+                    ],
+                  )),
               const SizedBox(height: 30.0),
             ],
           ),

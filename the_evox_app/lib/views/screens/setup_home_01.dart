@@ -154,11 +154,11 @@ class _MyWidgetState extends ConsumerState<SetupHome> {
                           context, 'You need to name the house to continue')
                       : ref.read(homesProvider.notifier).newHomeName =
                           _textController.text,
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const SelectCountry()),
-                  ),*/
+                  ),
                 },
                 child: const Text('Next'),
               ),
