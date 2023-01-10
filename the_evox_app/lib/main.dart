@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:the_evox_app/views/screens/session_handler.dart';
-import 'package:the_evox_app/views/screens/testing_repo.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:the_evox_app/views/screens/screens.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +17,7 @@ class TheEvox extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'The Evox',
-      home: SessionHandler(),
-      //home: TestingrepoScreen(),
+      home: HomeAddress(),
     );
   }
 }

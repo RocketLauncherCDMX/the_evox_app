@@ -33,7 +33,8 @@ class _AddRoomState extends State<AddRoom> {
                   ),
                   Transform.translate(
                       offset: const Offset(30, 30),
-                      child: CustomBackButton(onPressed: (() => Navigator.of(context).pop()))),
+                      child: CustomBackButton(
+                          onPressed: (() => Navigator.of(context).pop()))),
                 ],
               ),
             ),
@@ -57,7 +58,8 @@ class _AddRoomState extends State<AddRoom> {
                             fillColor: Colors.grey.shade200,
                             hintText: 'Room name',
                             //suffixIcon: const Icon(Icons.email_outlined),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
                             focusedBorder: OutlineInputBorder(
                               borderSide: const BorderSide(color: Colors.black),
                               borderRadius: BorderRadius.circular(25.7),

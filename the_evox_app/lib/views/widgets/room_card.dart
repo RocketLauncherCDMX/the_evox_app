@@ -10,7 +10,8 @@ createRoomCard() {
           Expanded(
             flex: 3,
             child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(25)),
                 child: SizedBox(
                     child: Image.asset(
                   'assets/images/room_example.jpg',
@@ -20,7 +21,8 @@ createRoomCard() {
           Expanded(
             flex: 1,
             child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(25)),
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(25)),
               child: Container(
                   alignment: Alignment.center,
                   color: Colors.grey.shade200,

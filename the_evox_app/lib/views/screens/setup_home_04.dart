@@ -36,10 +36,12 @@ class _MyWidgetState extends State<AddRooms> {
                       height: 50,
                       child: OutlinedButton(
                           style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15.0),
-                                      side: const BorderSide(color: Colors.grey)))),
+                                      side: const BorderSide(
+                                          color: Colors.grey)))),
                           onPressed: () => {Navigator.pop(context)},
                           child: const Icon(
                             Icons.arrow_back_ios_new,
@@ -107,7 +109,8 @@ class _MyWidgetState extends State<AddRooms> {
                             },
                             icon: const Icon(Icons.clear),
                             color: Colors.grey),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(25.7),
@@ -152,9 +155,11 @@ class _MyWidgetState extends State<AddRooms> {
               height: 60,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)))),
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25.0)))),
                 onPressed: () => {
                   Navigator.pushReplacement<void, void>(
                     context,

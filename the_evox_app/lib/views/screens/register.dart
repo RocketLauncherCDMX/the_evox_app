@@ -7,19 +7,20 @@ import 'package:the_evox_app/models/device_model.dart';
 import 'package:the_evox_app/models/home_model.dart';
 import 'package:the_evox_app/models/room_model.dart';
 import 'package:the_evox_app/models/user_profile_model.dart';
-import 'package:the_evox_app/providers/auth_provider.dart';
+import 'package:the_evox_app/repositories/auth_provider_repository.dart';
 import 'package:the_evox_app/providers/user_provider.dart';
 import 'package:the_evox_app/repositories/user_home_repository.dart';
 import 'package:the_evox_app/views/screens/screens.dart';
+import 'package:the_evox_app/views/widgets/alert_dialog_ok.dart';
 
-class RegisterForm extends ConsumerStatefulWidget {
-  const RegisterForm({Key? key}) : super(key: key);
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterScreen> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends ConsumerState<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterScreen> {
   bool _obscureText = true;
   bool _agreementIsChecked = false;
   final _userName = TextEditingController();
@@ -93,6 +94,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userName,
                             validator: _validateName,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            keyboardType: TextInputType.name,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             textCapitalization: TextCapitalization.sentences,
@@ -118,6 +122,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userEmail,
                             validator: _validateEmail,
+                            keyboardType: TextInputType.emailAddress,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             textCapitalization: TextCapitalization.none,
@@ -143,6 +150,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           TextFormField(
                             controller: _userPassword,
                             validator: _validatePassword,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             enableInteractiveSelection: false,
                             autofocus: false,
                             obscureText: _obscureText,
@@ -228,67 +237,69 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                                       borderRadius:
                                           BorderRadius.circular(25.0)))),
                       onPressed: () async {
-                        ref.read(userNameProvider.notifier).state =
-                            _userName.text;
-                        ref.read(userEmailProvider.notifier).state =
-                            _userEmail.text;
+                        if (_agreementIsChecked == true) {
+                          ref.read(userNameProvider.notifier).state =
+                              _userName.text;
+                          ref.read(userEmailProvider.notifier).state =
+                              _userEmail.text;
 
-                        if (signedProfile == null) {
-                          /** If THERE ISNT a user profile object created
-                               * then proceed to signin intend */
-                          try {
-                            /** Make sign up intend with email and password */
-                            UserCredential userSigned = await firebaseAuth
-                                .createUserWithEmailAndPassword(
-                                    email: ref.read(userEmailProvider),
-                                    password: _userPassword.text);
-                            print(ref.read(userNameProvider));
-                            print(ref.read(userEmailProvider));
+                          if (signedProfile == null) {
+                            /** If THERE ISNT a user profile object created
+                                 * then proceed to signin intend */
+                            try {
+                              /** Make sign up intend with email and password */
+                              UserCredential userSigned = await firebaseAuth
+                                  .createUserWithEmailAndPassword(
+                                      email: ref.read(userEmailProvider),
+                                      password: _userPassword.text);
+                              print(ref.read(userNameProvider));
+                              print(ref.read(userEmailProvider));
 
-                            /** If no error throwned
-                                 * get user info from credential */
-                            User? newUserInfo = userSigned.user;
+                              /** If no error throwned
+                                   * get user info from credential */
+                              User? newUserInfo = userSigned.user;
 
-                            /** Create a test filled up object user profile
-                                 * binded to user authenticated */
-                            UserProfile newUserProfile =
-                                _createTestFilledProfile(
-                                    testName:
-                                        newUserInfo!.displayName.toString(),
-                                    testAuthId: newUserInfo.uid);
+                              /** Create a test filled up object user profile
+                                   * binded to user authenticated */
+                              UserProfile newUserProfile =
+                                  _createTestFilledProfile(
+                                      testName:
+                                          newUserInfo!.displayName.toString(),
+                                      testAuthId: newUserInfo.uid);
 
-                            newUserProfile.email = _userEmail.text;
-                            newUserProfile.name = _userName.text;
+                              newUserProfile.email = _userEmail.text;
+                              newUserProfile.name = _userName.text;
 
-                            /** Create a user profile in DB from previous filledup
-                                 * object and stores the ID of created db doc */
-                            newUserProfile.profileDocId =
-                                await profileRepository
-                                    .createUserProfile(newUserProfile);
-                            if (profileRepository.status) {
-                              /** If Status indicator is true means that profile
-                                     * was successfully created and stores
-                                     * the locally created profile in global var */
-                              signedProfile = newUserProfile;
-                              homeRepository = UserHomeRepository(
-                                  userProfileDocId:
-                                      signedProfile!.profileDocId!);
-                            } else {
-                              print(profileRepository.errorMessage);
+                              /** Create a user profile in DB from previous filledup
+                                   * object and stores the ID of created db doc */
+                              newUserProfile.profileDocId =
+                                  await profileRepository
+                                      .createUserProfile(newUserProfile);
+                              if (profileRepository.status) {
+                                /** If Status indicator is true means that profile
+                                       * was successfully created and stores
+                                       * the locally created profile in global var */
+                                signedProfile = newUserProfile;
+                                homeRepository = UserHomeRepository(
+                                    userProfileDocId:
+                                        signedProfile!.profileDocId!);
+                              } else {
+                                print(profileRepository.errorMessage);
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              print("error: ${e.message}");
                             }
-                          } on FirebaseAuthException catch (e) {
-                            print("error: ${e.message}");
+                          } else {
+                            /** If THERE IS a user profile object then means that user was logged in */
+                            print("User is already logged!!");
                           }
+
+                          //ref.watch(isUserSignedProvider.notifier).state
                         } else {
-                          /** If THERE IS a user profile object then means that user was logged in */
-                          print("User is already logged!!");
+                          showAlertDialog(context,
+                              'Please, read and accept the privacy policy and user agreement first');
                         }
-                        setState(() {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MainScreen()));
-                        });
+                        if (!mounted) return;
                       },
                       child: const Text('Register'),
                     ),
@@ -416,7 +427,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginForm()),
+                                builder: (context) => const LoginScreen()),
                           ),
                         },
                       )
@@ -481,12 +492,13 @@ UserProfile _createTestFilledProfile({
   ];
   var userHomeRooms = [
     RoomModel(
-        roomId: "a1a1a1a1",
-        type: "living",
-        name: "Living room",
-        picture: "http://google.com/home1room1.jpg",
-        powerUsage: 2535.0,
-        devices: userHomeRoomDevices),
+      roomId: "a1a1a1a1",
+      type: "living",
+      name: "Living room",
+      picture: "http://google.com/home1room1.jpg",
+      powerUsage: 2535.0,
+      devices: userHomeRoomDevices,
+    ),
   ];
   var userHomes = [
     HomeModel(

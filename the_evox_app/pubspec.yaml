@@ -29,9 +29,10 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  adaptive_dialog: ^1.8.0+1
   cached_network_image: ^3.2.3
-  carousel_slider: ^4.1.1
   cloud_firestore: ^4.0.4
+  country_picker: ^2.0.19
   cupertino_icons: ^1.0.2
   equatable: ^2.0.5
   firebase_auth: ^4.1.1
@@ -39,20 +40,13 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.1.1
+  google_maps_flutter: ^2.2.3
   google_sign_in: ^5.4.2
+  hooks_riverpod: ^2.1.3
+  intl: null
+  permission_handler: ^10.2.0
   state_notifier: ^0.7.2+1
-  intl:
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
 dev_dependencies:
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter

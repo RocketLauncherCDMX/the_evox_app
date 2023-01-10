@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class CustomDropdown<T> extends StatefulWidget {
   const CustomDropdown(
-      {Key? key, required this.modelList, required this.model, required this.callback})
+      {Key? key,
+      required this.modelList,
+      required this.model,
+      required this.callback})
       : super(key: key);
   final List<T?> modelList;
   final T? model;

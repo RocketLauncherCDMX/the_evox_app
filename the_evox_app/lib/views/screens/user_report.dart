@@ -108,12 +108,12 @@ class _ReportState extends State<Report> {
             IconButton(
               enableFeedback: false,
               onPressed: () {
-                Navigator.pushReplacement<void, void>(
+                /*Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) => const UserSettings(),
                   ),
-                );
+                );*/
               },
               icon: Transform.scale(
                 scaleX: -1,
